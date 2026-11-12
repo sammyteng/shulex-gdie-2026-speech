@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 GDIE 香港峰会 · 大PPT+讲稿同屏跟读台 (Chris Zhao)</title>
+<style>
+  :root {
+    --bg: #0b1120;
+    --panel: #111827;
+    --card: #1e293b;
+    --card-hover: #26354d;
+    --border: #334155;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --accent: #0284c7;
+    --accent-light: #38bdf8;
+    --playing-bg: rgba(2, 132, 199, 0.22);
+    --playing-border: #38bdf8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Top Control Bar */
+  .topbar {
+    background: rgba(15, 23, 42, 0.96);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+    z-index: 100;
+  }
+  .brand-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .voice-badge {
+    font-size: 12px;
+    background: rgba(16, 185, 129, 0.16);
+    color: #34d399;
+    border: 1px solid rgba(52, 211, 153, 0.35);
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 7px 13px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    user-select: none;
+  }
+  .btn:hover { background: var(--card-hover); border-color: #64748b; }
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent-light);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(2, 132, 199, 0.4);
+  }
+  .btn-primary:hover { background: #0369a1; }
+  .btn-active {
+    background: rgba(56, 189, 248, 0.18);
+    border-color: var(--accent-light);
+    color: var(--accent-light);
+  }
+  .speed-select {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .now-playing-pill {
+    font-size: 12px;
+    color: var(--accent-light);
+    background: rgba(2, 132, 199, 0.14);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 5px 12px;
+    border-radius: 999px;
+    max-width: 260px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Split Stage Main Workspace */
+  .workspace {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 58% 42%;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* Left Column: Big PPT Stage */
+  .ppt-stage {
+    background: #060913;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px 20px 12px;
+    overflow: hidden;
+    min-height: 0;
+  }
+  .ppt-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+  .ppt-page-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ppt-badge {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 800;
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 6px;
+  }
+  .ppt-title-text {
+    font-size: 15px;
+    font-weight: 700;
+    color: #e2e8f0;
+  }
+  .ppt-time-badge {
+    font-size: 12px;
+    color: var(--muted);
+    background: rgba(255,255,255,0.06);
+    padding: 3px 9px;
+    border-radius: 6px;
+  }
+
+  /* Main Big Image Container */
+  .ppt-canvas-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 0;
+    background: #030712;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  }
+  .ppt-canvas-wrap img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+  }
+  .stage-nav-overlay {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(15, 23, 42, 0.78);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+    width: 44px;
+    height: 64px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    backdrop-filter: blur(6px);
+  }
+  .stage-nav-overlay:hover {
+    background: var(--accent);
+    border-color: var(--accent-light);
+    transform: translateY(-50%) scale(1.06);
+  }
+  .stage-nav-prev { left: 12px; }
+  .stage-nav-next { right: 12px; }
+
+  /* Bottom PPT Controls & Filmstrip */
+  .ppt-bottom-bar {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .ppt-nav-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .ppt-btn-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .filmstrip {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 6px 2px;
+    scrollbar-width: thin;
+  }
+  .film-item {
+    flex: 0 0 auto;
+    width: 64px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    background: #1e293b;
+    cursor: pointer;
+    position: relative;
+    opacity: 0.65;
+    transition: all 0.15s;
+  }
+  .film-item:hover { opacity: 0.95; transform: translateY(-1px); }
+  .film-item.active {
+    border-color: var(--accent-light);
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.45);
+  }
+  .film-item img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+  }
+  .film-num {
+    position: absolute;
+    bottom: 2px;
+    right: 3px;
+    background: rgba(0,0,0,0.78);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 0 4px;
+    border-radius: 3px;
+  }
+
+  /* Right Column: Synchronized Script Teleprompter */
+  .script-panel {
+    background: var(--panel);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 18px 22px 90px;
+    min-height: 0;
+  }
+  .script-header-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .script-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .script-slide-label {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .cue-line {
+    font-size: 13px;
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.04);
+    border-left: 3px solid #64748b;
+    padding: 7px 11px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 8px;
+  }
+  .pron-line {
+    font-size: 13px;
+    color: #fde68a;
+    background: rgba(245, 158, 11, 0.12);
+    border-left: 3px solid #f59e0b;
+    padding: 7px 11px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .para-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .para-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .para-card:hover {
+    border-color: #64748b;
+    background: var(--card-hover);
+  }
+  .para-card.playing {
+    background: var(--playing-bg);
+    border-color: var(--playing-border);
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.2);
+  }
+  .para-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .play-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-light);
+    background: rgba(2, 132, 199, 0.16);
+    padding: 4px 11px;
+    border-radius: 999px;
+  }
+  .para-card.playing .play-tag {
+    background: var(--accent-light);
+    color: #0f172a;
+  }
+  .en-text {
+    font-size: 18px;
+    line-height: 1.65;
+    color: #f8fafc;
+    font-weight: 450;
+    margin-bottom: 10px;
+  }
+  .hl-blue {
+    color: #38bdf8;
+    font-weight: 700;
+  }
+  .zh-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted);
+    border-top: 1px dashed rgba(255,255,255,0.1);
+    padding-top: 8px;
+  }
+  body.hide-zh .zh-text { display: none; }
+
+  .script-footer-nav {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  /* All-Slides Scroll Mode (Optional Toggle) */
+  body.mode-list {
+    overflow: auto;
+    height: auto;
+  }
+  body.mode-list .workspace { display: none; }
+  .all-slides-container {
+    display: none;
+    max-width: 1280px;
+    margin: 20px auto 100px;
+    padding: 0 20px;
+    flex-direction: column;
+    gap: 20px;
+  }
+  body.mode-list .all-slides-container { display: flex; }
+  .list-row {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    display: grid;
+    grid-template-columns: 440px 1fr;
+    overflow: hidden;
+  }
+  .list-row-left {
+    background: #050811;
+    padding: 14px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .list-row-left img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #334155;
+  }
+  .list-row-right {
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Bottom Audio Progress Bar */
+  .bottom-player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(15, 23, 42, 0.96);
+    border-top: 1px solid var(--border);
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 200;
+  }
+  .bottom-player audio {
+    flex: 1;
+    height: 34px;
+  }
+
+  @media (max-width: 1024px) {
+    body { height: auto; overflow: auto; }
+    .workspace { grid-template-columns: 1fr; height: auto; overflow: visible; }
+    .ppt-stage { height: 56vh; border-right: none; border-bottom: 1px solid var(--border); }
+    .script-panel { height: auto; overflow: visible; }
+    .list-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand-area">
+    <div class="brand-title">🎙️ 2026 GDIE 演讲同屏工作台</div>
+    <span class="voice-badge">✨ 真人感美式演讲男声 (OpenAI Keynote Voice)</span>
+    <span class="now-playing-pill" id="statusPill">就绪 · 点击播放即可连续跟读</span>
+  </div>
+  <div class="controls">
+    <button class="btn btn-primary" id="btnPlayContinue" onclick="toggleContinuousPlay()">▶ 从当前页连续播放</button>
+    <button class="btn" onclick="stopPlayback()">⏹ 停止</button>
+    <button class="btn btn-active" id="btnAutoSyncPpt" onclick="toggleAutoSyncPpt()" title="开启后，语音连续播到下一页时PPT会自动翻页；你也可以随时手动点左右键切PPT">🔄 语音自动翻PPT: 开</button>
+    <select class="speed-select" id="speedSelect" onchange="changeSpeed(this.value)">
+      <option value="0.85">语速 0.85x (慢速跟读)</option>
+      <option value="0.92">语速 0.92x (稳健)</option>
+      <option value="1.0" selected>语速 1.0x (标准演讲)</option>
+      <option value="1.08">语速 1.08x (紧凑)</option>
+      <option value="1.15">语速 1.15x (快速)</option>
+    </select>
+    <button class="btn" id="btnToggleZh" onclick="toggleZh()">中英对照: 开</button>
+    <button class="btn" id="btnToggleView" onclick="toggleViewMode()">📜 切换30页长卷视图</button>
+    <a class="btn" style="background:#059669;border-color:#34d399;color:#fff;" href="bd.html?k=2026">📱 嘉宾与106客户手机背调库</a>
+    <a class="btn" href="audio/full_speech_20min.mp3" download="2026_GDIE_AI_MultiHub_English_Speech_20min.mp3">⬇️ 下载完整MP3</a>
+  </div>
+</header>
+
+<!-- Split-Screen Workspace: Left Big PPT + Right Script -->
+<main class="workspace">
+  <!-- Left: Huge PPT Stage -->
+  <section class="ppt-stage">
+    <div class="ppt-top-bar">
+      <div class="ppt-page-indicator">
+        <span class="ppt-badge" id="stageSlideBadge">Slide 01 / 30</span>
+        <span class="ppt-title-text" id="stageSlideTitle">Cover</span>
+      </div>
+      <span class="ppt-time-badge" id="stageSlideTime">⏱ 00:00 - 00:40</span>
+    </div>
+
+    <div class="ppt-canvas-wrap">
+      <button class="stage-nav-overlay stage-nav-prev" onclick="stepSlide(-1)" title="上一页 PPT (键盘 ←)">◀</button>
+      <img id="stagePptImg" src="slides/slide-01.jpg" alt="Current PPT Slide">
+      <button class="stage-nav-overlay stage-nav-next" onclick="stepSlide(1)" title="下一页 PPT (键盘 →)">▶</button>
+    </div>
+
+    <div class="ppt-bottom-bar">
+      <div class="ppt-nav-controls">
+        <div class="ppt-btn-group">
+          <button class="btn" onclick="stepSlide(-1)">⬅️ 上一页 PPT</button>
+          <button class="btn" onclick="stepSlide(1)">下一页 PPT ➡️</button>
+          <span style="font-size:12px;color:var(--muted);margin-left:6px;">💡 可随时点击左右按钮、键盘 ← → 键或下方缩略图自由翻页</span>
+        </div>
+        <button class="btn" onclick="playSlideFromStart(currentSlideIdx)">🔊 重听本页全部段落</button>
+      </div>
+      <div class="filmstrip" id="filmstrip"></div>
+    </div>
+  </section>
+
+  <!-- Right: Current Slide Script & Teleprompter -->
+  <section class="script-panel" id="scriptPanel">
+    <div class="script-header-box">
+      <div class="script-header-top">
+        <div class="script-slide-label" id="scriptHeaderTitle">Slide 01 · 讲稿与发音提词</div>
+        <button class="btn btn-primary" onclick="playSlideFromStart(currentSlideIdx)">▶ 从本页开始连续播</button>
+      </div>
+      <div class="cue-line" id="scriptCue"></div>
+      <div class="pron-line" id="scriptPron"></div>
+    </div>
+
+    <div class="para-list" id="paraList"></div>
+
+    <div class="script-footer-nav">
+      <button class="btn" onclick="stepSlide(-1)">⬅️ 切到上一页 (Slide <span id="prevNumLabel">1</span>)</button>
+      <button class="btn btn-primary" onclick="stepSlide(1)">切到下一页 (Slide <span id="nextNumLabel">2</span>) ➡️</button>
+    </div>
+  </section>
+</main>
+
+<!-- Optional Full 30-Slide Scroll View -->
+<div class="all-slides-container" id="allSlidesContainer"></div>
+
+<!-- Bottom Audio Bar -->
+<div class="bottom-player">
+  <span style="font-size:12px;color:var(--muted);white-space:nowrap;">进度条可拖动：</span>
+  <audio id="mainAudio" controls preload="none"></audio>
+</div>
+
+<script>
+const SLIDES = [{"num": 1, "title": "Cover: AI-MultiHub — AI Agents Across Your Business", "time": "00:00 - 00:40", "cue": "开场站定，面带微笑环视全场；前30秒不翻页，待掌声落后切到第2页", "pron_note": "GDIE 逐字母读 G-D-I-E；Shulex 读作 /ˈʃuːleks/ (Shoo-lex)；MultiHub 重音在 Multi", "img": "slides/slide-01.jpg", "slide_audio": "audio/slide_01.mp3", "paras": [{"idx": 1, "audio": "audio/s01_p1.mp3", "en_html": "Hello everyone! Good morning, Hong Kong! It is truly great to be here at GDIE with all of you today. My name is Chris Zhao, Co-founder and COO of Shulex.", "zh": "大家好！早上好，香港！今天非常高兴能来到 GDIE 峰会现场和各位相聚。我是赵好（Chris Zhao），Shulex 的联合创始人兼首席运营官（COO）。"}, {"idx": 2, "audio": "audio/s01_p2.mp3", "en_html": "Today, I want to talk about a shift that every single brand in this room is feeling right now — <span class=\"hl-blue\">how we move from isolated AI tools to an AI-MultiHub that runs across your entire business: one foundation, every touchpoint, and measurable outcomes.</span>", "zh": "今天，我想和大家聊聊在座每一个品牌此时此刻都在经历的一场巨变——我们如何从零散孤立的 AI 小工具，走向贯穿整个企业全链路的 AI-MultiHub：一个底座、全触点覆盖、以及可量化的业务结果。"}]}, {"num": 2, "title": "Speaker Biography: Chris Zhao", "time": "00:40 - 01:30", "cue": "切换到第2页，轻松自然地自我介绍，拉近与香港本地及出海品牌嘉宾的距离", "pron_note": "2021 地道读法是 twenty twenty-one（不要读 two thousand twenty-one）；200+ 读作 over two hundred", "img": "slides/slide-02.jpg", "slide_audio": "audio/slide_02.mp3", "paras": [{"idx": 1, "audio": "audio/s02_p1.mp3", "en_html": "Before we dive in, let me share a quick 30-second intro about my own journey. Before co-founding Shulex in 2021, I spent years in strategic consulting at IBM, and later led digital operations inside major enterprise groups.", "zh": "在正式展开之前，我先花30秒简单介绍一下我自己的经历。在2021年联合创立 Shulex 之前，我在 IBM 做了多年的战略咨询，后来也在大型名企集团内部负责数字化运营。"}, {"idx": 2, "audio": "audio/s02_p2.mp3", "en_html": "Over the past five years at Shulex, my team and I have worked hands-on with over 200 global brands — including names like Anker, Aosom, and Songmics. <span class=\"hl-blue\">And I have never focused on AI for the sake of hype; my only obsession is how AI actually lands inside real enterprise workflows and drives commercial ROI.</span>", "zh": "在 Shulex 的过去五年里，我和团队深度陪跑了超过200家全球品牌——包括安克（Anker）、遨森（Aosom）、致欧（Songmics）等等。我从不为了追风口而谈 AI；我唯一死磕的事情，就是 AI 怎么真正在复杂的企业工作流里落地，怎么跑出真金白银的商业 ROI。"}]}, {"num": 3, "title": "Section 1: The Market Shift", "time": "01:30 - 01:55", "cue": "切换到第3页章节过渡页，语气沉稳有力，抛出核心问题", "pron_note": "Point Solution 意为“单点工具”；Multi-Agent Collaboration 重音清晰、语速略放慢强调", "img": "slides/slide-03.jpg", "slide_audio": "audio/slide_03.mp3", "paras": [{"idx": 1, "audio": "audio/s03_p1.mp3", "en_html": "So let's start with Section One: The Market Shift. <span class=\"hl-blue\">Why are so many companies buying AI tools left and right, yet still struggling to see real impact on their bottom line? Because the market is shifting from single-point tools to multi-agent collaboration.</span>", "zh": "那我们就先进入第一部分：市场范式的转移。为什么今天那么多企业左买一个 AI 工具、右买一个插件，最后在利润表上却看不到真正的改观？因为整个市场正在从“单点工具”向“多智能体协同”跨越。"}]}, {"num": 4, "title": "Most Companies Already Have AI — In Silos", "time": "01:55 - 03:00", "cue": "切换到第4页，手势指向屏幕上的四个孤岛框，引发台下共鸣", "pron_note": "Silos 读作 /ˈsaɪloʊz/（孤岛）；CRM 逐字母读 C-R-M", "img": "slides/slide-04.jpg", "slide_audio": "audio/slide_04.mp3", "paras": [{"idx": 1, "audio": "audio/s04_p1.mp3", "en_html": "Does this picture look familiar to you? Today, almost every company already has AI. Your customer service team has a chatbot. Your marketing team has a content generator. Your ecommerce team uses an analytics plugin, and sales has a CRM copilot.", "zh": "画面上的这个场景，大家是不是觉得似曾相识？今天，几乎每家公司都已经用上 AI 了。客服团队装了个聊天机器人，营销团队用着内容生成工具，电商团队买了分析插件，销售团队也有个 CRM 助手。"}, {"idx": 2, "audio": "audio/s04_p2.mp3", "en_html": "Every department has its own tool, its own vendor, and its own data island. <span class=\"hl-blue\">When your customer journeys are connected, having your AI trapped in silos is actually creating more friction, not less.</span>", "zh": "每个部门都有自己的工具、自己的供应商、自己的数据孤岛。当消费者的购买与服务旅程是连贯一体的时候，把 AI 困在部门孤岛里，实际上是在制造更多内耗，而不是在提效。"}]}, {"num": 5, "title": "The Real Bottleneck Is Disconnected Execution", "time": "03:00 - 03:55", "cue": "切换到第5页，对比左右两侧，最后有力地读出底部的红色警示结论", "pron_note": "Bottleneck 意为瓶颈；Disconnected Execution 连读自然，重音在 Disconnected", "img": "slides/slide-05.jpg", "slide_audio": "audio/slide_05.mp3", "paras": [{"idx": 1, "audio": "audio/s05_p1.mp3", "en_html": "And that brings us to the real bottleneck. The problem isn't that the AI models aren't smart enough — the problem is disconnected execution. What customers experience in support never informs marketing. What users say in product reviews never reaches your product R&D team in time.", "zh": "这就引出了真正的症结所在。现在的问题根本不是 AI 大模型不够聪明，而是“执行链路的割裂”。客服在一线听到的客户抱怨，传不到营销部；用户在评论区写的真实痛点，也无法及时反馈给产品研发团队。"}, {"idx": 2, "audio": "audio/s05_p2.mp3", "en_html": "You end up paying for five different tools, doing repeated training, and nobody is accountable for the final conversion or retention number. <span class=\"hl-blue\">Adding more isolated AI tools does not create an AI strategy — it just creates AI chaos.</span>", "zh": "结果就是，你交了五份软件的钱，做了五遍重复的训练，最后却没有任何一个系统对最终的转化率或复购率负责。堆砌再多孤立的 AI 工具也拼不出真正的 AI 战略——它只会制造一场 AI 混乱。"}]}, {"num": 6, "title": "The Evolution of Enterprise AI (1.0 -> 2.0 -> 3.0)", "time": "03:55 - 04:55", "cue": "切换到第6页，手势从左向右移动，依次讲解 1.0、2.0 到 3.0 的演进", "pron_note": "1.0 / 2.0 / 3.0 地道读法是 one-point-oh, two-point-oh, three-point-oh（千万不要读 one zero）", "img": "slides/slide-06.jpg", "slide_audio": "audio/slide_06.mp3", "paras": [{"idx": 1, "audio": "audio/s06_p1.mp3", "en_html": "If we zoom out, we can clearly see the three stages of Enterprise AI evolution. Phase 1.0 was AI Tools — helping individuals write an email faster. Phase 2.0 was AI Agents — handling a single task, like answering a basic FAQ.", "zh": "如果我们把视角拉高，就能非常清晰地看到企业级 AI 演进的三个阶段。1.0 阶段是“AI 工具”，帮员工个人把邮件写得更快；2.0 阶段是“单点 AI 智能体”，能独立处理某一项具体任务，比如回答常规的 FAQ。"}, {"idx": 2, "audio": "audio/s06_p2.mp3", "en_html": "But today, leading brands are entering Phase 3.0: the AI-MultiHub. <span class=\"hl-blue\">In Phase 3.0, we are no longer just making individual employees 10% faster; we are connecting multiple specialized agents on one shared brain to drive end-to-end business outcomes.</span>", "zh": "而今天，领先的品牌正在迈入 3.0 阶段：AI-MultiHub。在 3.0 时代，我们不再只是让单个员工的打字速度提升10%，而是让多个专业智能体共享同一个“企业大脑”，协同跑通端到端的业务结果。"}]}, {"num": 7, "title": "What Is AI-MultiHub?", "time": "04:55 - 05:55", "cue": "切换到第7页，指向中间的核心架构图，清晰定义 AI-MultiHub", "pron_note": "Solvea 读作 /sɒlˈviːə/ (Sol-vee-uh)；Unified Brain 重音在 Unified", "img": "slides/slide-07.jpg", "slide_audio": "audio/slide_07.mp3", "paras": [{"idx": 1, "audio": "audio/s07_p1.mp3", "en_html": "So what exactly is an AI-MultiHub? Look at this architecture. At the center is one unified enterprise brain — powered by Shulex and our global brand Solvea — that connects your product knowledge, order systems, customer voice, and brand policies.", "zh": "那么，究竟什么是 AI-MultiHub？大家看这张架构图。最核心的底座是一个统一的“企业大脑”——由 Shulex 及其全球化品牌 Solvea 驱动——它把你的产品知识库、订单系统、客户之声（VoC）以及品牌售后政策全部打通。"}, {"idx": 2, "audio": "audio/s07_p2.mp3", "en_html": "On top of this single foundation, specialized agents work together across customer service, voice, social media, influencer marketing, and consumer insights. <span class=\"hl-blue\">One knowledge base, unified routing, and shared context across every single customer touchpoint.</span>", "zh": "在这同一个底座之上，不同的专业智能体各司其职又紧密协同，覆盖在线客服、语音电话、社媒评论、红人营销和消费者洞察。一套知识库、统一调度路由、全触点共享上下文。"}]}, {"num": 8, "title": "Why Shulex Can Build AI-MultiHub", "time": "05:55 - 06:45", "cue": "切换到第8页，用手势强调右侧三大硬核壁垒（合规认证、多模型架构、全球品牌验证）", "pron_note": "ISO 27001 地道读法：I-S-O twenty-seven oh-oh-one；SOC 2 地道读法：sock two (/sɒk tuː/)；GDPR 逐字母读 G-D-P-R", "img": "slides/slide-08.jpg", "slide_audio": "audio/slide_08.mp3", "paras": [{"idx": 1, "audio": "audio/s08_p1.mp3", "en_html": "You might ask: why is Shulex uniquely positioned to build this? Because you cannot build an enterprise MultiHub overnight with just a prompt wrapper. It takes years of deep domain accumulation across global commerce.", "zh": "大家可能会问：为什么是 Shulex 能把这个底座搭起来？因为企业级 MultiHub 绝不是套个大模型外壳一夜之间就能攒出来的，它需要多年在全球零售与电商场景里的深度沉淀。"}, {"idx": 2, "audio": "audio/s08_p2.mp3", "en_html": "We process billions of real consumer interactions, integrate seamlessly with Shopify, Amazon, TikTok, and Zendesk, and meet the strictest global security standards — including ISO 27001, SOC 2, and GDPR. <span class=\"hl-blue\">We combine enterprise-grade security with battle-tested vertical AI agents.</span>", "zh": "我们处理过数十亿次真实的消费者交互，与 Shopify、Amazon、TikTok、Zendesk 等生态无缝打通，并拿下了全球最严苛的数据安全合规认证——包括 ISO 27001、SOC 2 和 GDPR。我们将金融级的数据安全与久经实战检验的垂直 AI 智能体融为一体。"}]}, {"num": 9, "title": "Two Core Engines: Solvea + VOC AI", "time": "06:45 - 07:40", "cue": "切换到第9页，双手分别示意左右两大引擎，再合拢表示闭环飞轮", "pron_note": "VOC 读作 V-O-C（Voice of Customer）；Flywheel 意为增长飞轮", "img": "slides/slide-09.jpg", "slide_audio": "audio/slide_09.mp3", "paras": [{"idx": 1, "audio": "audio/s09_p1.mp3", "en_html": "Under the hood, our AI-MultiHub runs on two core engines that form a continuous data flywheel. Engine number one is Solvea — our all-scenario Customer Engagement Agent Hub that handles pre-sales conversion, post-sales resolution, and social engagement.", "zh": "在底层架构上，我们的 AI-MultiHub 由两大核心引擎驱动，形成一个生生不息的数据飞轮。第一大引擎是 Solvea——我们的全场景客户交互智能体中枢，负责售前导购转化、售后复杂问题解决以及社媒互动。"}, {"idx": 2, "audio": "audio/s09_p2.mp3", "en_html": "Engine number two is Shulex VOC AI — our Consumer & Market Intelligence Hub that turns millions of reviews, tickets, and social posts into product and marketing insights. <span class=\"hl-blue\">Insight drives better action, and every action generates fresher insight — that is the closed-loop flywheel.</span>", "zh": "第二大引擎是 Shulex VOC AI——我们的消费者与市场洞察中枢，把海量的评论、工单和社媒帖子提炼成产品研发与营销洞察。洞察指导更精准的行动，而每一次交互行动又沉淀出更鲜活的洞察——这就是真正的闭环增长飞轮。"}]}, {"num": 10, "title": "Section 2: Inside the AI-MultiHub", "time": "07:40 - 08:30", "cue": "切换到第10页，逐一指向 Solvea 六大产品矩阵模块（Text, Voice, Video, Social, Desk, Suite）", "pron_note": "SolveaSuite 的 Suite 读作 /swiːt/ (Sweet，不要读成 suit)；SolveaText/Voice/Video/Desk 连读自然", "img": "slides/slide-10.jpg", "slide_audio": "audio/slide_10.mp3", "paras": [{"idx": 1, "audio": "audio/s10_p1.mp3", "en_html": "Now let's step inside Section Two and look at how this MultiHub actually works in practice. Here is the complete Solvea Agent Matrix: SolveaText for chat and email, SolveaVoice for phone calls, SolveaVideo for visual troubleshooting, SolveaSocial for public comments, SolveaDesk for agent copilot, and SolveaSuite for unified management.", "zh": "现在我们进入第二部分，看看这个 MultiHub 在实战中到底是怎么运转的。大家看到的正是完整的 Solvea 智能体矩阵：负责聊天与邮件的 SolveaText、负责电话语音的 SolveaVoice、负责视频排障的 SolveaVideo、负责公域评论的 SolveaSocial、赋能人工坐席的 SolveaDesk，以及统一管理后台 SolveaSuite。"}, {"idx": 2, "audio": "audio/s10_p2.mp3", "en_html": "<span class=\"hl-blue\">Instead of six disconnected software vendors, you get six specialized AI agents working as one team.</span>", "zh": "你不再需要对接六家互不相通的软件供应商，而是直接拥有六个像同一个团队一样默契配合的专业 AI 智能体。"}]}, {"num": 11, "title": "SolveaText: Conversational Agent for Sales & Support", "time": "08:30 - 09:20", "cue": "切换到第11页，聚焦聊天与邮件场景的真实业务闭环执行力", "pron_note": "ERP / OMS / CRM 逐字母清晰读出：E-R-P, O-M-S, C-R-M；RMA 读作 R-M-A（退换货授权）", "img": "slides/slide-11.jpg", "slide_audio": "audio/slide_11.mp3", "paras": [{"idx": 1, "audio": "audio/s11_p1.mp3", "en_html": "Let's look at SolveaText first. Most traditional chatbots only do one thing: they throw a help-center link at your customer and say 'good luck.' SolveaText is built to actually resolve the issue from end to end across live chat, email, WhatsApp, and marketplaces.", "zh": "我们先看 SolveaText。传统的客服机器人往往只做一件事：丢给客户一个帮助中心链接，然后祝他好运。而 SolveaText 的设计初衷，是在网页聊天、邮件、WhatsApp 和各大电商平台里，真正把问题端到端解决掉。"}, {"idx": 2, "audio": "audio/s11_p2.mp3", "en_html": "Because it connects directly to your OMS, ERP, and logistics systems, it can check real-time parcel status, verify warranty rules, and process a refund or replacement automatically. <span class=\"hl-blue\">It doesn't just reply to tickets — it closes tickets and turns pre-sales questions into checkout conversions.</span>", "zh": "因为它直接打通了你的 OMS、ERP 和物流系统，所以它能实时查物流轨迹、核验保修政策，并自动完成退款或补发操作。它不只是在“回复”工单，而是在“完结”工单，并把售前的每一次咨询转化为购物车里的成交。"}]}, {"num": 12, "title": "SolveaVoice: Human-Like Voice Agent for Global Call Centers", "time": "09:20 - 10:10", "cue": "切换到第12页，重点强调 24/7 全天候、多语种母语级电话交互", "pron_note": "24/7 地道美式读法是 twenty-four seven（千万别读 twenty-four slash seven）；IVR 读作 I-V-R", "img": "slides/slide-12.jpg", "slide_audio": "audio/slide_12.mp3", "paras": [{"idx": 1, "audio": "audio/s12_p1.mp3", "en_html": "Next is SolveaVoice. For high-ticket products or urgent delivery issues, customers still prefer to pick up the phone and call. Historically, running a 24/7 multilingual call center across North America and Europe was painfully expensive.", "zh": "接下来是 SolveaVoice。对于高客单价产品或者紧急的物流派送问题，海外消费者依然习惯直接打电话。过去，要在北美和欧洲搭建一个 7×24 小时的多语种呼叫中心，成本高得惊人。"}, {"idx": 2, "audio": "audio/s12_p2.mp3", "en_html": "SolveaVoice delivers ultra-low-latency, human-like voice conversations in dozens of languages, handling inbound inquiries, outbound follow-ups, and instant order verification. <span class=\"hl-blue\">Zero hold time for your customers, and a fraction of the cost of traditional BPO call centers.</span>", "zh": "SolveaVoice 支持数十种语言的超低延迟、真人级自然语音对话，无论是呼入接待、主动外呼回访，还是实时订单核验都能轻松搞定。让你的客户享受“零等待”接听，而成本仅为传统外包呼叫中心的一小部分。"}]}, {"num": 13, "title": "SolveaVideo: Visual AI Agent for Complex Hardware & Troubleshooting", "time": "10:10 - 11:00", "cue": "切换到第13页，举例智能硬件、3D打印机或割草机等排障场景", "pron_note": "3D 读作 three-D；Troubleshooting 重音在首音节 Trou-ble-shoot-ing", "img": "slides/slide-13.jpg", "slide_audio": "audio/slide_13.mp3", "paras": [{"idx": 1, "audio": "audio/s13_p1.mp3", "en_html": "What if the customer has a complex hardware product — like a 3D printer, an e-bike, or a robotic lawnmower — and can't explain the problem in words? That is why we built SolveaVideo.", "zh": "如果客户买的是复杂的智能硬件——比如 3D 打印机、电助力自行车（E-bike）或者智能割草机——遇到故障用文字根本说不清楚怎么办？这就是我们打造 SolveaVideo 的原因。"}, {"idx": 2, "audio": "audio/s13_p2.mp3", "en_html": "Instead of twenty back-and-forth emails, the customer simply points their phone camera at the device. SolveaVideo sees the indicator lights, recognizes the part, and guides them step by step in real time. <span class=\"hl-blue\">We turn frustrating product returns into effortless first-contact resolutions.</span>", "zh": "不再需要来来回回发二十封邮件，客户只需把手机摄像头对准设备，SolveaVideo 就能实时看懂指示灯状态、识别零件位置，手把手引导客户完成排障。我们把原本令人头疼的退货退款，变成了轻松的一次性解决。"}]}, {"num": 14, "title": "SolveaSocial: Public Sentiment Guard & Social Conversion", "time": "11:00 - 11:45", "cue": "切换到第14页，强调黑五/大促期间广告贴评论区的实时控评与导流转化", "pron_note": "ROAS 行业地道读法：R-O-A-S 或 /ˈroʊæs/ (row-az)；TikTok / Instagram 自然连读", "img": "slides/slide-14.jpg", "slide_audio": "audio/slide_14.mp3", "paras": [{"idx": 1, "audio": "audio/s14_p1.mp3", "en_html": "Now let's move to public channels with SolveaSocial. When you run ads on Facebook, Instagram, or TikTok, what happens in the comment section? One unanswered complaint can kill your ad conversion, while dozens of 'Where can I buy this?' comments go cold.", "zh": "接着我们来看公域社媒场景的 SolveaSocial。当你在 Facebook、Instagram 或 TikTok 上投流打广告时，评论区往往会发生什么？一条没及时处理的差评就能毁掉整条广告的转化率，而几十条问“怎么买”的潜在订单却因为没人回而凉掉了。"}, {"idx": 2, "audio": "audio/s14_p2.mp3", "en_html": "SolveaSocial monitors your social posts and ad comments 24/7 — instantly hiding spam, de-escalating negative sentiment, and DM-ing high-intent buyers with a discount link. <span class=\"hl-blue\">It protects your brand reputation while boosting your ad ROAS.</span>", "zh": "SolveaSocial 全天候 7×24 小时盯紧你的社媒帖子和广告评论区——秒级隐藏垃圾黑评、安抚负面情绪，并自动给高意向买家发私信送上专属购买链接。在守护品牌口碑的同时，直接拉升你的广告投产比（ROAS）。"}]}, {"num": 15, "title": "SolveaDesk & SolveaSuite: Human-AI Collaboration & Control Tower", "time": "11:45 - 12:30", "cue": "切换到第15页，说明 AI 处理 80% 标准化问题，剩下 20% 赋能给人工专家", "pron_note": "80% / 20% 读作 eighty percent / twenty percent；Copilot 读作 /ˈkoʊˌpaɪlət/", "img": "slides/slide-15.jpg", "slide_audio": "audio/slide_15.mp3", "paras": [{"idx": 1, "audio": "audio/s15_p1.mp3", "en_html": "Of course, AI doesn't mean replacing human empathy. When a complex VIP case needs a human touch, SolveaDesk steps in as an intelligent copilot for your human agents — summarizing context, translating languages, and drafting replies in one click. <span class=\"hl-blue\">And with SolveaSuite, managers get a single control tower to audit quality, track resolution rates, and manage every agent in one place.</span>", "zh": "当然，用 AI 绝不意味着抛弃真人的温度。当遇到复杂的 VIP 客诉需要人工介入时，SolveaDesk 就会化身为人工坐席的超级副驾驶——一键生成前情摘要、实时跨语言翻译、智能起草回复。而通过 SolveaSuite，管理者则拥有了一个全局控制塔，在一个后台就能完成全量质检、追踪解决率并统筹所有智能体。"}]}, {"num": 16, "title": "VOC AI & Market Intelligence: Listening to Every Customer", "time": "12:30 - 13:15", "cue": "切换到第16页，展示 VOC 如何把全网评论与客服工单转化为产品和市场决策", "pron_note": "Reddit / YouTube / Amazon 自然发音；guesswork 意为盲目拍脑袋猜测", "img": "slides/slide-16.jpg", "slide_audio": "audio/slide_16.mp3", "paras": [{"idx": 1, "audio": "audio/s16_p1.mp3", "en_html": "Now let's look at the other half of our brain: VOC AI and Market Intelligence. Every day, your customers are telling you exactly why they buy, why they return, and what feature they wish you had — across Amazon reviews, Reddit threads, YouTube comments, and your own support tickets.", "zh": "现在我们来看企业大脑的另一半：VOC AI 与市场洞察。每一天，你的消费者都在清清楚楚地告诉你：他们为什么买单、为什么退货、以及他们最渴望什么新功能——这些声音散落在亚马逊评论、Reddit 帖子、YouTube 留言以及你自己的客服工单里。"}, {"idx": 2, "audio": "audio/s16_p2.mp3", "en_html": "Our VOC engine aggregates and analyzes all of this unstructured voice automatically — benchmarking you against competitors and spotting product defects weeks before they become a crisis. <span class=\"hl-blue\">We replace product guesswork with real-time consumer truth.</span>", "zh": "我们的 VOC 引擎能自动汇聚并深度剖析所有这些非结构化的声音——帮你跟竞品做全方位对标，并在产品小瑕疵演变成大规模公关危机之前提前数周发出预警。我们用实时的消费者真话，彻底取代拍脑袋的产品猜测。"}]}, {"num": 17, "title": "Social & Influencer Agent: Scaling Creator Marketing", "time": "13:15 - 14:00", "cue": "切换到第17页，讲透红人营销如何从“大海捞针”变成受 VOC 痛点指导的精准建联", "pron_note": "ROI 读作 R-O-I；Outreach 意为建联外发", "img": "slides/slide-17.jpg", "slide_audio": "audio/slide_17.mp3", "paras": [{"idx": 1, "audio": "audio/s17_p1.mp3", "en_html": "And how do we turn those consumer insights into top-of-funnel growth? Through our Social and Influencer Agent. Instead of manually searching for influencers and sending generic templates, our agent matches creators based on your target audience persona, automates personalized outreach, and even generates creative briefs based on the top buying points from VOC.", "zh": "那么，我们又该如何把这些消费者洞察转化为前端的流量增长呢？答案就是我们的社媒与红人营销智能体。告别人工大海捞针找达人、群发千篇一律模板邮件的传统做法，我们的智能体会根据目标受众画像精准匹配创作者、自动发送个性化建联邀约，甚至直接提炼 VOC 里的核心爽点来生成爆款脚本 Brief。"}, {"idx": 2, "audio": "audio/s17_p2.mp3", "en_html": "<span class=\"hl-blue\">Your customer insights directly fuel your influencer scripts, closing the loop between service, product, and growth.</span>", "zh": "让你的消费者洞察直接变成达人种草的爆款脚本，真正打通从服务、产品到增长的完整闭环。"}]}, {"num": 18, "title": "Section 3: Proven Outcomes & Global Case Studies", "time": "14:00 - 14:35", "cue": "切换到第18页，语速稍作停顿，充满底气地开启真实客户案例部分", "pron_note": "PowerPoint 读作 Power-Point；Production 意为真实生产环境", "img": "slides/slide-18.jpg", "slide_audio": "audio/slide_18.mp3", "paras": [{"idx": 1, "audio": "audio/s18_p1.mp3", "en_html": "Now let's move to Section Three: Proven Outcomes. <span class=\"hl-blue\">Architecture diagrams look great on PowerPoint, but at the end of the day, only real numbers in production matter.</span>", "zh": "现在我们进入第三部分：实战验证的业务结果。架构图在 PPT 上画得再漂亮都没用，归根结底，只有真实生产环境里跑出来的硬核数据才算数。"}, {"idx": 2, "audio": "audio/s18_p2.mp3", "en_html": "Let me share how six different companies across electronics, home furnishing, logistics, and robotics are using our AI-MultiHub right now.", "zh": "接下来，我为大家分享六个来自消费电子、家居、跨境物流和智能机器人领域的真实标杆案例，看看他们现在是如何用 AI-MultiHub 拿结果的。"}]}, {"num": 19, "title": "Case Study 1: Anker — Global Consumer Electronics Leader", "time": "14:35 - 15:25", "cue": "切换到第19页，手势指向 Anker 的核心提效与洞察协同指标", "pron_note": "Anker 地道读法同 Anchor (/ˈæŋkər/)", "img": "slides/slide-19.jpg", "slide_audio": "audio/slide_19.mp3", "paras": [{"idx": 1, "audio": "audio/s19_p1.mp3", "en_html": "First, Anker — a global benchmark in consumer electronics that everyone here knows well. Operating across dozens of countries and product lines, Anker needed a unified system to listen to millions of customer voices while maintaining world-class service speed.", "zh": "第一个案例是安克创新（Anker）——在座各位都非常熟悉的全球消费电子标杆。业务遍布几十个国家和众多产品线，Anker 需要一套统一的系统来聆听数以百万计的消费者声音，同时保持世界级的服务响应速度。"}, {"idx": 2, "audio": "audio/s19_p2.mp3", "en_html": "By deploying Shulex VOC and our AI agent workflows, Anker connected customer feedback directly into product iteration and automated frontline support at massive scale. <span class=\"hl-blue\">For Anker, AI is no longer just a cost-saver; it is the engine behind faster product innovation and higher brand loyalty.</span>", "zh": "通过部署 Shulex VOC 与智能体工作流，Anker 将一线客户反馈直接打通到产品迭代闭环中，并实现了大规模的一线客服自动化。对 Anker 而言，AI 早已不只是一个省钱工具，而是驱动产品快速创新与品牌高忠诚度的核心引擎。"}]}, {"num": 20, "title": "Case Study 2: Aosom — Large-Scale Cross-Border Home & Outdoor", "time": "15:25 - 16:10", "cue": "切换到第20页，展示大件家居多站点、多语种客服自动化成效", "pron_note": "Aosom 品牌官方英文读法就是 Awesome (/ˈɔːsəm/)；SKU 逐字母读 S-K-U", "img": "slides/slide-20.jpg", "slide_audio": "audio/slide_20.mp3", "paras": [{"idx": 1, "audio": "audio/s20_p1.mp3", "en_html": "Second, look at Aosom — a massive global ecommerce player in home, outdoor, and furniture operating across North America and Europe. With tens of thousands of SKUs and complex shipping inquiries across multiple languages, peak-season ticket surges used to put immense pressure on their operations.", "zh": "第二个案例是遨森电商（Aosom）——业务横跨北美和欧洲的大型家居与户外跨境巨头。面对数以万计的 SKU 和多语种复杂的物流大件咨询，过去每逢旺季爆单，客服团队都会面临巨大的运营压力。"}, {"idx": 2, "audio": "audio/s20_p2.mp3", "en_html": "With Solvea, Aosom automated high-volume order, logistics, and after-sales inquiries across multiple regions while keeping customer satisfaction high. <span class=\"hl-blue\">They scaled their global revenue without having to linearly scale their support headcount.</span>", "zh": "接入 Solvea 之后，遨森在多个国家站点实现了海量订单查询、物流追踪及售后咨询的自动化闭环，同时保持了极高的客户满意度。他们实现了全球营收规模的持续扩张，而无需再按比例盲目扩招客服人力。"}]}, {"num": 21, "title": "Case Study 3: Jsyard — Peak Season Scaling Without Headcount Surge", "time": "16:10 - 16:50", "cue": "切换到第21页，聚焦旺季抗峰能力与高解决率数据", "pron_note": "Jsyard 读作 J-S-Yard；$20,000 a month 读作 twenty thousand dollars a month；CSAT 读作 /ˈsiːsæt/ (C-sat)", "img": "slides/slide-21.jpg", "slide_audio": "audio/slide_21.mp3", "paras": [{"idx": 1, "audio": "audio/s21_p1.mp3", "en_html": "Third is Jsyard. Like many fast-growing DTC brands, their biggest headache was seasonal volume spikes — hiring and training temporary agents before Black Friday, only to struggle with quality.", "zh": "第三个案例是 Jsyard。和许多高速增长的 DTC 品牌一样，他们过去最头疼的就是旺季流量洪峰——黑五前夕匆忙招聘培训临时客服，结果服务质量往往难以保障。"}, {"idx": 2, "audio": "audio/s21_p2.mp3", "en_html": "<span class=\"hl-blue\">By deploying Solvea across their customer touchpoints, Jsyard achieved over 70% independent AI resolution and saved more than $20,000 a month in direct labor costs, while lifting their CSAT score above 90%. </span>Peak season is no longer a staffing crisis — it is fully absorbed by AI.", "zh": "通过在全触点部署 Solvea，Jsyard 实现了超过 70% 的 AI 独立解决率，每月直接节省超过 2 万美元的人力成本，同时将客户满意度（CSAT）提升到了 90% 以上。旺季大促不再是一场人力危机——流量洪峰被 AI 稳稳接住。"}]}, {"num": 22, "title": "Case Study 4: GOFO — Cross-Border Logistics & Last-Mile Delivery", "time": "16:50 - 17:30", "cue": "切换到第22页，展示物流行业高频语音+文本查询的秒级响应", "pron_note": "GOFO 读作 /ˈɡoʊfoʊ/ (Go-fo)；Last-mile delivery 意为末端派送", "img": "slides/slide-22.jpg", "slide_audio": "audio/slide_22.mp3", "paras": [{"idx": 1, "audio": "audio/s22_p1.mp3", "en_html": "Fourth, let's look at a completely different industry: GOFO, a fast-growing last-mile logistics and parcel delivery network. In logistics, every second counts — customers call and message constantly asking 'Where is my package?' or 'How do I reschedule delivery?'", "zh": "第四个案例，我们来看一个完全不同的行业：GOFO，一家高速成长的跨境末端物流与包裹派送网络。在物流行业，每一秒钟都至关重要——每天都有海量客户不停地打电话、发消息问：“我的包裹到哪了？”或者“怎么改派送时间？”"}, {"idx": 2, "audio": "audio/s22_p2.mp3", "en_html": "By combining SolveaText and SolveaVoice with their real-time parcel tracking system, GOFO automated the vast majority of routine delivery inquiries and address updates. <span class=\"hl-blue\">Response time dropped from minutes to seconds, even during peak holiday shipping.</span>", "zh": "通过将 SolveaText 和 SolveaVoice 与其实时包裹轨迹系统深度打通，GOFO 实现了绝大多数常规派送查询与改址需求的自动化处理。哪怕在节假日物流最高峰期，响应时间也从过去的几分钟缩短到了几秒钟。"}]}, {"num": 23, "title": "Case Study 5: Mammotion — Smart Robotic Lawnmowers", "time": "17:30 - 18:05", "cue": "切换到第23页，强调高客单价智能机器人的复杂技术支持与多模态排障", "pron_note": "Mammotion 读作 /mæˈmoʊʃən/ (Mam-motion)；RTK 逐字母读 R-T-K", "img": "slides/slide-23.jpg", "slide_audio": "audio/slide_23.mp3", "paras": [{"idx": 1, "audio": "audio/s23_p1.mp3", "en_html": "Fifth is Mammotion, a global pioneer in smart robotic lawnmowers. High-tech outdoor robotics involve complex setup, app pairing, and RTK signal troubleshooting. <span class=\"hl-blue\">Solvea acts as a 24/7 technical product expert for Mammotion — guiding users through installation and resolving technical tickets accurately so human engineers can focus on core R&D.</span>", "zh": "第五个案例是库犸科技（Mammotion），全球智能割草机器人领域的先锋品牌。高客单价的户外机器人涉及复杂的安装部署、App 配网以及 RTK 信号排障。Solvea 成为了库犸全天候 7×24 小时的“AI 技术专家”——一步步引导用户完成安装并精准解决技术工单，把宝贵的人工工程师释放出来专注于核心研发。"}]}, {"num": 24, "title": "Case Study 6: ANRAN — Smart Home Security Cameras", "time": "18:05 - 18:40", "cue": "切换到第24页，突出安防摄像头品类的 7×24 毫秒级在线率与高转化", "pron_note": "ANRAN 读作 /ˈænræn/ (An-ran)；Wi-Fi 美式读法 /ˈwaɪfaɪ/ (why-fye)", "img": "slides/slide-24.jpg", "slide_audio": "audio/slide_24.mp3", "paras": [{"idx": 1, "audio": "audio/s24_p1.mp3", "en_html": "And sixth is ANRAN, a leading smart security camera brand. For home security users, trust and instant response are everything when configuring Wi-Fi or cloud storage. <span class=\"hl-blue\">With Solvea, ANRAN built an always-on global support hub that resolves setup questions in seconds, drastically reducing return rates caused by user configuration errors.</span>", "zh": "第六个案例是安然（ANRAN），领先的智能安防摄像头品牌。对于家庭安防用户而言，在配置 Wi-Fi 或云存储时，信任感和秒级响应就是一切。借助 Solvea，ANRAN 搭建了永不掉线的全球服务中枢，秒级解决用户的配网设置疑问，大幅降低了因“不会用、配不上”而导致的无理由退货率。"}]}, {"num": 25, "title": "Section 4: How to Deploy AI-MultiHub", "time": "18:40 - 18:55", "cue": "切换到第25页章节页，节奏明快，告诉大家落地其实非常轻量快速", "pron_note": "Deploy 读作 /dɪˈplɔɪ/；IT overhaul 意为伤筋动骨的 IT 改造", "img": "slides/slide-25.jpg", "slide_audio": "audio/slide_25.mp3", "paras": [{"idx": 1, "audio": "audio/s25_p1.mp3", "en_html": "That brings us to our final section: How do you actually deploy this? <span class=\"hl-blue\">Because the best part of AI-MultiHub is that it does not require a six-month IT overhaul.</span>", "zh": "这就来到了我们的最后一部分：企业到底该如何落地部署？因为 AI-MultiHub 最棒的地方就在于，它根本不需要你搞一场长达半年的 IT 大改造。"}]}, {"num": 26, "title": "Why Our Delivery Model Works: Co-Pilot to Autopilot", "time": "18:55 - 19:20", "cue": "切换到第26页，强调我们不是卖完账号就不管的纯 SaaS，而是专家陪跑交付结果", "pron_note": "SaaS 读作 /sæs/ (sass)；SLA 逐字母读 S-L-A", "img": "slides/slide-26.jpg", "slide_audio": "audio/slide_26.mp3", "paras": [{"idx": 1, "audio": "audio/s26_p1.mp3", "en_html": "Why do so many AI projects fail after contract signing? Because vendors just hand you a login account and walk away. <span class=\"hl-blue\">At Shulex, we don't just sell software — we deliver guaranteed business outcomes with dedicated AI implementation experts, continuous knowledge tuning, and strict SLA guarantees.</span>", "zh": "为什么市面上那么多 AI 项目签完合同就烂尾了？因为传统软件商只是丢给你一个登录账号就不管了。而在 Shulex，我们不只是卖软件——我们配备专属的 AI 交付专家团队，提供持续的知识库调优与严格的 SLA 保障，直接对你的业务结果负责。"}]}, {"num": 27, "title": "Start From One High-Value Scenario, Expand Into MultiHub", "time": "19:20 - 19:40", "cue": "切换到第27页，手势展示三步走（2周上线首场景 -> 跑通闭环 -> 扩展全触点）", "pron_note": "100% 地道口语读作 a hundred percent；Weeks 读音清晰", "img": "slides/slide-27.jpg", "slide_audio": "audio/slide_27.mp3", "paras": [{"idx": 1, "audio": "audio/s27_p1.mp3", "en_html": "And you don't have to boil the ocean on Day One. <span class=\"hl-blue\">Start with one high-value scenario — like automating 70% of your after-sales tickets or auditing 100% of your VOC in two weeks — prove the ROI fast, and then expand step by step into your full AI-MultiHub.</span>", "zh": "而且你完全不需要在第一天就全面铺开。你可以从一个高价值场景切入——比如在两周内先实现 70% 售后工单的自动化，或者跑通 100% 的全量 VOC 洞察——快速验证 ROI 之后，再一步步扩展成完整的 AI-MultiHub。"}]}, {"num": 28, "title": "Why Leading Brands Choose Shulex", "time": "19:40 - 19:50", "cue": "切换到第28页，快速点出四大核心优势作为收尾强化", "pron_note": "Day One 连读自然；Global Scale 重音清晰", "img": "slides/slide-28.jpg", "slide_audio": "audio/slide_28.mp3", "paras": [{"idx": 1, "audio": "audio/s28_p1.mp3", "en_html": "<span class=\"hl-blue\">To sum it up: global brands choose Shulex because we bring deep ecommerce DNA, an all-in-one MultiHub architecture, enterprise-grade compliance, and an outcome-driven delivery team that stands beside you from Day One.</span>", "zh": "总结来说，全球领先品牌之所以选择 Shulex，是因为我们兼具深厚的跨境电商基因、一体化的 MultiHub 架构、严苛的企业级安全合规，以及一支从第一天起就与你并肩作战的结果导向型交付团队。"}]}, {"num": 29, "title": "Closing Takeaway: One Foundation. Every Touchpoint.", "time": "19:50 - 20:00", "cue": "切换到第29页金句页，放慢语速，字字铿锵，给全场留下最深印象", "pron_note": "最后三词金句每句之间停顿半秒：One foundation. / Every touchpoint. / Measurable outcomes.", "img": "slides/slide-29.jpg", "slide_audio": "audio/slide_29.mp3", "paras": [{"idx": 1, "audio": "audio/s29_p1.mp3", "en_html": "If there is only one thing you take away from my talk today, let it be this: <span class=\"hl-blue\">Stop buying disconnected AI silos. Build one AI-MultiHub — one foundation, every touchpoint, and measurable outcomes.</span>", "zh": "如果今天这场分享大家只带走一句话，我希望是这句：停止购买彼此割裂的 AI 孤岛工具吧！去构建属于你的 AI-MultiHub——一个底座，全触点覆盖，拿可量化的业务结果。"}]}, {"num": 30, "title": "Thank You & Booth Invitation", "time": "20:00 - 20:10", "cue": "切换到第30页致谢页，微笑点头致意，手指展位方向邀请台下嘉宾交流", "pron_note": "GDIE 读作 G-D-I-E；最后一句热情收尾", "img": "slides/slide-30.jpg", "slide_audio": "audio/slide_30.mp3", "paras": [{"idx": 1, "audio": "audio/s30_p1.mp3", "en_html": "Thank you so much, Hong Kong! <span class=\"hl-blue\">Our team is right outside at the Shulex and Solvea booth — come grab a coffee with us, test our live AI agents in person, and let's build your AI-MultiHub together! Thank you, and enjoy the rest of GDIE!</span>", "zh": "非常感谢大家，谢谢香港！我们的团队就在会场外的 Shulex & Solvea 展位——欢迎大家出来喝杯咖啡，亲手体验一下我们的实时 AI 智能体，让我们一起构建属于你的 AI-MultiHub！谢谢大家，祝各位在 GDIE 收获满满！"}]}];
+
+let currentSlideIdx = 0; // 0 to 29
+let playingSlideIdx = -1;
+let playingParaIdx = -1;
+let isContinuousPlaying = false;
+let autoSyncPpt = true;
+let showZh = true;
+let isListMode = false;
+
+const audioEl = document.getElementById('mainAudio');
+const statusPill = document.getElementById('statusPill');
+const btnPlayContinue = document.getElementById('btnPlayContinue');
+
+function init() {
+  // Build filmstrip
+  const strip = document.getElementById('filmstrip');
+  strip.innerHTML = SLIDES.map((s, idx) => `
+    <div class="film-item ${idx === 0 ? 'active' : ''}" id="film-${idx}" onclick="selectSlide(${idx}, true)">
+      <img src="${s.img}" loading="lazy" alt="P${s.num}">
+      <span class="film-num">P${s.num}</span>
+    </div>
+  `).join('');
+
+  // Build list view
+  const listContainer = document.getElementById('allSlidesContainer');
+  listContainer.innerHTML = SLIDES.map((s, sIdx) => `
+    <div class="list-row" id="list-slide-${sIdx}">
+      <div class="list-row-left">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="ppt-badge">Slide ${String(s.num).padStart(2, '0')}</span>
+          <span class="ppt-time-badge">⏱ ${s.time}</span>
+        </div>
+        <img src="${s.img}" loading="lazy" alt="Slide ${s.num}">
+        <div class="cue-line" style="margin:0;">🎬 ${s.cue}</div>
+      </div>
+      <div class="list-row-right">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3 style="font-size:17px;color:#fff;">${s.title}</h3>
+          <button class="btn btn-primary" onclick="playSpecific(${sIdx}, 0)">▶ 从此页连续播</button>
+        </div>
+        ${s.pron_note ? `<div class="pron-line">🎙️ 地道读法：${s.pron_note}</div>` : ''}
+        ${s.paras.map((p, pIdx) => `
+          <div class="para-card" id="list-para-${sIdx}-${pIdx}" onclick="playSpecific(${sIdx}, ${pIdx})">
+            <div class="para-top">
+              <span class="play-tag">▶ 点击连续播 · Para ${p.idx}</span>
+            </div>
+            <div class="en-text">${p.en_html}</div>
+            <div class="zh-text">${p.zh}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  renderStageSlide(0);
+
+  // Keyboard navigation
+  window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      stepSlide(-1);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      stepSlide(1);
+    } else if (e.key === ' ') {
+      e.preventDefault();
+      toggleContinuousPlay();
+    }
+  });
+}
+
+function renderStageSlide(idx) {
+  currentSlideIdx = idx;
+  const s = SLIDES[idx];
+  const padNum = String(s.num).padStart(2, '0');
+
+  document.getElementById('stageSlideBadge').textContent = `Slide ${padNum} / 30`;
+  document.getElementById('stageSlideTitle').textContent = s.title;
+  document.getElementById('stageSlideTime').textContent = `⏱ ${s.time}`;
+  document.getElementById('stagePptImg').src = s.img;
+
+  document.getElementById('scriptHeaderTitle').textContent = `Slide ${padNum} · ${s.title}`;
+  document.getElementById('scriptCue').textContent = `🎬 动作与翻页：${s.cue}`;
+  const pronEl = document.getElementById('scriptPron');
+  if (s.pron_note) {
+    pronEl.style.display = 'block';
+    pronEl.textContent = `🎙️ 地道读法：${s.pron_note}`;
+  } else {
+    pronEl.style.display = 'none';
+  }
+
+  document.getElementById('prevNumLabel').textContent = Math.max(1, s.num - 1);
+  document.getElementById('nextNumLabel').textContent = Math.min(30, s.num + 1);
+
+  const paraList = document.getElementById('paraList');
+  paraList.innerHTML = s.paras.map((p, pIdx) => {
+    const isPlayingThis = (playingSlideIdx === idx && playingParaIdx === pIdx && !audioEl.paused);
+    return `
+      <div class="para-card ${isPlayingThis ? 'playing' : ''}" id="stage-para-${pIdx}" onclick="playSpecific(${idx}, ${pIdx})">
+        <div class="para-top">
+          <span class="play-tag">${isPlayingThis ? '🔊 正在朗读 · 点击暂停' : `▶ 点击从此段连续播 (Para ${p.idx})`}</span>
+          <span style="font-size:12px;color:var(--muted);">Slide ${s.num} - P${p.idx}</span>
+        </div>
+        <div class="en-text">${p.en_html}</div>
+        <div class="zh-text">${p.zh}</div>
+      </div>
+    `;
+  }).join('');
+
+  // Highlight active filmstrip
+  document.querySelectorAll('.film-item').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+  const activeFilm = document.getElementById(`film-${idx}`);
+  if (activeFilm) {
+    activeFilm.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }
+}
+
+function selectSlide(idx, manual = false) {
+  if (idx < 0 || idx >= SLIDES.length) return;
+  renderStageSlide(idx);
+  document.getElementById('scriptPanel').scrollTop = 0;
+}
+
+function stepSlide(delta) {
+  const next = currentSlideIdx + delta;
+  if (next >= 0 && next < SLIDES.length) {
+    selectSlide(next, true);
+  }
+}
+
+function playSlideFromStart(sIdx) {
+  playSpecific(sIdx, 0, true);
+}
+
+function playSpecific(sIdx, pIdx, forceStart = false) {
+  if (!forceStart && playingSlideIdx === sIdx && playingParaIdx === pIdx) {
+    if (!audioEl.paused) {
+      audioEl.pause();
+      updatePlayingUI();
+      return;
+    } else {
+      audioEl.play();
+      updatePlayingUI();
+      return;
+    }
+  }
+
+  isContinuousPlaying = true;
+  playingSlideIdx = sIdx;
+  playingParaIdx = pIdx;
+
+  if (autoSyncPpt && currentSlideIdx !== sIdx) {
+    renderStageSlide(sIdx);
+  }
+
+  const targetAudio = SLIDES[sIdx].paras[pIdx].audio;
+  audioEl.src = targetAudio;
+  audioEl.playbackRate = parseFloat(document.getElementById('speedSelect').value);
+  audioEl.play();
+  updatePlayingUI();
+}
+
+function toggleContinuousPlay() {
+  if (playingSlideIdx !== -1 && !audioEl.paused) {
+    audioEl.pause();
+    updatePlayingUI();
+  } else if (playingSlideIdx === currentSlideIdx && playingParaIdx !== -1 && audioEl.paused) {
+    audioEl.play();
+    updatePlayingUI();
+  } else {
+    playSpecific(currentSlideIdx, 0, true);
+  }
+}
+
+function stopPlayback() {
+  isContinuousPlaying = false;
+  audioEl.pause();
+  audioEl.currentTime = 0;
+  playingSlideIdx = -1;
+  playingParaIdx = -1;
+  updatePlayingUI();
+}
+
+audioEl.addEventListener('ended', () => {
+  if (!isContinuousPlaying || playingSlideIdx === -1) return;
+  const curSlide = SLIDES[playingSlideIdx];
+  if (playingParaIdx + 1 < curSlide.paras.length) {
+    // Next paragraph in same slide
+    playSpecific(playingSlideIdx, playingParaIdx + 1, true);
+  } else if (playingSlideIdx + 1 < SLIDES.length) {
+    // Next slide
+    playSpecific(playingSlideIdx + 1, 0, true);
+  } else {
+    // Finished all 30 slides
+    stopPlayback();
+    statusPill.textContent = '🎉 全场 30 页演讲已连续播放完毕';
+  }
+});
+
+audioEl.addEventListener('play', updatePlayingUI);
+audioEl.addEventListener('pause', updatePlayingUI);
+
+function updatePlayingUI() {
+  const isPlaying = !audioEl.paused && playingSlideIdx !== -1;
+  if (isPlaying) {
+    const s = SLIDES[playingSlideIdx];
+    statusPill.textContent = `🔊 正在连播：Slide ${s.num} · 第 ${playingParaIdx + 1} 段`;
+    btnPlayContinue.textContent = '⏸ 暂停连播';
+  } else if (playingSlideIdx !== -1) {
+    const s = SLIDES[playingSlideIdx];
+    statusPill.textContent = `⏸ 已暂停在：Slide ${s.num} · 第 ${playingParaIdx + 1} 段`;
+    btnPlayContinue.textContent = '▶ 继续连播';
+  } else {
+    statusPill.textContent = '就绪 · 点击播放即可连续跟读';
+    btnPlayContinue.textContent = '▶ 从当前页连续播放';
+  }
+
+  // Update right panel cards if showing playing slide
+  if (currentSlideIdx === playingSlideIdx) {
+    renderStageSlide(currentSlideIdx);
+  } else {
+    document.querySelectorAll('#paraList .para-card').forEach(el => el.classList.remove('playing'));
+  }
+
+  // Update list view cards
+  document.querySelectorAll('.all-slides-container .para-card').forEach(el => el.classList.remove('playing'));
+  if (playingSlideIdx !== -1) {
+    const listCard = document.getElementById(`list-para-${playingSlideIdx}-${playingParaIdx}`);
+    if (listCard && isPlaying) listCard.classList.add('playing');
+  }
+}
+
+function toggleAutoSyncPpt() {
+  autoSyncPpt = !autoSyncPpt;
+  const btn = document.getElementById('btnAutoSyncPpt');
+  btn.textContent = `🔄 语音自动翻PPT: ${autoSyncPpt ? '开' : '关'}`;
+  btn.classList.toggle('btn-active', autoSyncPpt);
+}
+
+function changeSpeed(val) {
+  audioEl.playbackRate = parseFloat(val);
+}
+
+function toggleZh() {
+  showZh = !showZh;
+  document.body.classList.toggle('hide-zh', !showZh);
+  document.getElementById('btnToggleZh').textContent = `中英对照: ${showZh ? '开' : '关'}`;
+}
+
+function toggleViewMode() {
+  isListMode = !isListMode;
+  document.body.classList.toggle('mode-list', isListMode);
+  document.getElementById('btnToggleView').textContent = isListMode ? '🖥️ 切换双栏大PPT同看' : '📜 切换30页长卷视图';
+}
+
+init();
+</script>
+</body>
+</html>

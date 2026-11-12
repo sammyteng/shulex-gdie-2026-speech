@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shulex · Solvea (AI-MultiHub) 展会三语（普/粤/英）对照口袋宝典（支持单句点读）</title>
+<style>
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang HK", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    background: #0f172a;
+    color: #0f172a;
+    padding-bottom: 40px;
+  }
+
+  /* Sticky Audio Console */
+  .audio-bar {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: rgba(15, 23, 42, 0.96);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #334155;
+    padding: 10px 16px;
+    color: #f8fafc;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .bar-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .bar-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #60a5fa;
+    margin-right: 4px;
+  }
+  .ctrl-btn {
+    background: #1e293b;
+    color: #e2e8f0;
+    border: 1px solid #475569;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 11.8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .ctrl-btn:hover {
+    background: #334155;
+    border-color: #60a5fa;
+  }
+  .ctrl-btn.primary {
+    background: #2563eb;
+    border-color: #3b82f6;
+    color: #ffffff;
+  }
+  .ctrl-btn.hk-btn {
+    background: #b91c1c;
+    border-color: #ef4444;
+    color: #ffffff;
+  }
+  .ctrl-btn.active-mode {
+    background: #059669;
+    border-color: #10b981;
+    color: #ffffff;
+  }
+  .bar-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    flex-wrap: wrap;
+  }
+  .status-pill {
+    background: #1e293b;
+    border: 1px solid #334155;
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: #fde047;
+    font-size: 11.5px;
+    font-weight: 700;
+  }
+  select.speed-sel {
+    background: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #475569;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+  }
+
+  /* Main Container */
+  .page {
+    max-width: 1280px;
+    background: #ffffff;
+    margin: 14px auto;
+    padding: 18px 20px;
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #0f172a;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .header-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+  }
+  .header-badge {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #ffffff;
+    background: #1d4ed8;
+    padding: 4px 10px;
+    border-radius: 5px;
+  }
+
+  .sec {
+    margin-bottom: 12px;
+  }
+  .sec-head {
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .sec-head span.en-tag {
+    color: #93c5fd;
+    font-weight: 600;
+    font-size: 11.5px;
+  }
+
+  .tri-row {
+    display: grid;
+    grid-template-columns: 32% 33% 35%;
+    border: 1px solid #cbd5e1;
+    border-top: none;
+    background: #ffffff;
+  }
+  body.view-hk-en .tri-row, body.view-hk-en .cta-box {
+    grid-template-columns: 48% 52%;
+  }
+  body.view-hk-en .col-zh, body.view-hk-en .cta-zh {
+    display: none !important;
+  }
+  body.view-zh-en .tri-row, body.view-zh-en .cta-box {
+    grid-template-columns: 48% 52%;
+  }
+  body.view-zh-en .col-hk, body.view-zh-en .cta-hk {
+    display: none !important;
+  }
+
+  @media (max-width: 860px) {
+    .tri-row, .cta-box {
+      grid-template-columns: 1fr !important;
+    }
+    .col-zh, .col-hk, .cta-zh, .cta-hk {
+      border-right: none !important;
+      border-bottom: 1px dashed #cbd5e1;
+    }
+  }
+  .tri-row:last-child {
+    border-radius: 0 0 6px 6px;
+  }
+  .tri-row.alt {
+    background: #f8fafc;
+  }
+  .col-zh, .col-hk, .col-en {
+    padding: 10px 12px;
+    font-size: 12.8px;
+    line-height: 1.58;
+    position: relative;
+  }
+  .col-zh {
+    border-right: 1px dashed #cbd5e1;
+    color: #1e293b;
+  }
+  .col-hk {
+    border-right: 1px dashed #cbd5e1;
+    color: #3f1d1d;
+    background: rgba(254, 242, 242, 0.35);
+  }
+  .col-en {
+    color: #0f172a;
+  }
+
+  .chip-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    gap: 6px;
+  }
+  .sent-hint {
+    font-size: 10.5px;
+    color: #64748b;
+    font-weight: 600;
+  }
+
+  .play-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #93c5fd;
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s;
+  }
+  .play-chip.hk-chip {
+    background: #fef2f2;
+    color: #b91c1c;
+    border-color: #fca5a5;
+  }
+  .play-chip:hover {
+    background: #dbeafe;
+    border-color: #2563eb;
+  }
+  .play-chip.hk-chip:hover {
+    background: #fee2e2;
+    border-color: #dc2626;
+  }
+  .play-chip.active {
+    background: #dc2626 !important;
+    color: #ffffff !important;
+    border-color: #dc2626 !important;
+  }
+
+  /* Clickable Sentence Styling */
+  .sent {
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 1px 2px;
+    transition: background 0.12s, box-shadow 0.12s;
+    border-bottom: 1px dotted rgba(100, 116, 139, 0.45);
+  }
+  .sent:hover {
+    background: #e0f2fe;
+    border-bottom-color: #0284c7;
+  }
+  .col-hk .sent:hover {
+    background: #fee2e2;
+    border-bottom-color: #dc2626;
+  }
+  .sent.active-sent {
+    background: #fde047 !important;
+    color: #0f172a !important;
+    box-shadow: 0 0 0 2px #eab308;
+    border-bottom: none;
+  }
+
+  .hl {
+    color: #1d4ed8;
+    font-weight: 700;
+    background: #dbeafe;
+    padding: 0 3px;
+    border-radius: 3px;
+  }
+  .col-hk .hl {
+    color: #b91c1c;
+    background: #fee2e2;
+  }
+  .tag-title {
+    font-weight: 800;
+    color: #0f172a;
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+  .col-hk .tag-title {
+    color: #991b1b;
+  }
+  .col-en .tag-title {
+    color: #1e3a8a;
+  }
+  .q-line {
+    font-weight: 800;
+    color: #b91c1c;
+    margin-bottom: 5px;
+    display: block;
+    font-size: 12.8px;
+  }
+  .a-line {
+    display: block;
+  }
+
+  .cta-box {
+    display: grid;
+    grid-template-columns: 32% 33% 35%;
+    background: #eff6ff;
+    border: 2px solid #3b82f6;
+    border-radius: 6px;
+  }
+  .cta-zh, .cta-hk, .cta-en {
+    padding: 10px 12px;
+    font-size: 12.8px;
+    line-height: 1.55;
+    color: #1e3a8a;
+  }
+  .cta-zh, .cta-hk {
+    border-right: 1px dashed #93c5fd;
+  }
+  .cta-hk {
+    color: #7f1d1d;
+    background: rgba(254, 242, 242, 0.5);
+  }
+
+  @media print {
+    .audio-bar, .chip-row {
+      display: none !important;
+    }
+    .sent {
+      border-bottom: none !important;
+    }
+    body {
+      background: #ffffff;
+      padding: 0;
+    }
+    .page {
+      box-shadow: none;
+      margin: 0;
+      padding: 6mm 8mm;
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="audio-bar">
+  <div class="bar-left">
+    <span class="bar-title">🎧 三语单句点读宝典</span>
+    <button class="ctrl-btn hk-btn" onclick="startFullPlaylist('hk')">▶️ 连播粤语 (All HK)</button>
+    <button class="ctrl-btn primary" onclick="startFullPlaylist('en')">▶️ 连播英文 (All EN)</button>
+    <button class="ctrl-btn" onclick="startFullPlaylist('zh')">▶️ 连播普通话 (All ZH)</button>
+    <button class="ctrl-btn" id="btnLoopOne" onclick="toggleLoopOne()">🔁 单句/单段循环: 关</button>
+    <button class="ctrl-btn" onclick="stopAudio()">⏹ 停止</button>
+  </div>
+  <div class="bar-right">
+    <span class="status-pill" id="nowPlayingText">👆 直接点击页面任意【单句】即可听该句发音！</span>
+    <select id="viewSelect" class="speed-sel" onchange="changeView(this.value)">
+      <option value="all" selected>👁️ 普 + 粤 + 英 三语同屏</option>
+      <option value="hk-en">🇭🇰 只看 粤语 + 英文</option>
+      <option value="zh-en">🇨🇳 只看 普通话 + 英文</option>
+    </select>
+    <select id="speedSelect" class="speed-sel" onchange="changeSpeed(this.value)">
+      <option value="0.85">0.85x 慢速跟读</option>
+      <option value="1.0" selected>1.0x 正常实战</option>
+      <option value="1.15">1.15x 干练快语速</option>
+    </select>
+  </div>
+</div>
+
+<div class="page">
+  <div class="header">
+    <div class="header-title">Shulex · Solvea (AI-MultiHub) 展会【普通话 · 港式粤语 · 英文】三语单句点读宝典</div>
+    <div class="header-badge">👆 点任意单句即读单句 ｜ 点顶部按钮读整段 ｜ 100%对齐 GDIE PPT</div>
+  </div>
+
+  <div class="sec">
+  <div class="sec-head"><span>01. 一句话破冰介绍（10秒抓人 · 递名片/路过展位张嘴第一句）</span><span class="en-tag">01. One-Sentence Hook (Click Any Sentence to Speak)</span></div>
+  <div class="tri-row">
+    <div class="col-zh" id="cell_01_hook_zh"><div class="chip-row">
+<span class="play-chip " id="btn_01_hook_zh" onclick="playCardSeq('01_hook', 'zh')">🔊 读整段普通话</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="a-line"><span class="sent" id="sent_01_hook_zh_s0" data-clip="01_hook_zh_s0.mp3" onclick="playSingleSent(this, '01_hook_zh_s0.mp3')" title="🔊 点击朗读此句">“您好！我们是 <strong>Shulex</strong>（产品叫 <strong>Solvea</strong>），做的是 <strong>AI-MultiHub 全业务智能体</strong>——</span> <span class="sent" id="sent_01_hook_zh_s1" data-clip="01_hook_zh_s1.mp3" onclick="playSingleSent(this, '01_hook_zh_s1.mp3')" title="🔊 点击朗读此句">简单说，我们不卖那种各部门割裂的单点小插件，而是<span class='hl'>用一个大脑把文字、电话、视频全打通，从售前导购、查单排障到退货挽留全包了</span>；</span> <span class="sent" id="sent_01_hook_zh_s2" data-clip="01_hook_zh_s2.mp3" onclick="playSingleSent(this, '01_hook_zh_s2.mp3')" title="🔊 点击朗读此句">而且我们敢把<span class='hl'>保底 40% 的 AI 回复率和 80% 准确率直接写进合同</span>，像安克（Anker）、致欧这 200 多家大牌都在用。”</span></span></div>
+    <div class="col-hk" id="cell_01_hook_hk"><div class="chip-row">
+<span class="play-chip hk-chip" id="btn_01_hook_hk" onclick="playCardSeq('01_hook', 'hk')">🔊 讀整段香港粵語</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="a-line"><span class="sent" id="sent_01_hook_hk_s0" data-clip="01_hook_hk_s0.mp3" onclick="playSingleSent(this, '01_hook_hk_s0.mp3')" title="🔊 点击朗读此句">“你好呀！我哋係 <strong>Shulex</strong>（產品叫 <strong>Solvea</strong>），做緊一套 <strong>AI-MultiHub 全業務智能體</strong>——</span> <span class="sent" id="sent_01_hook_hk_s1" data-clip="01_hook_hk_s1.mp3" onclick="playSingleSent(this, '01_hook_hk_s1.mp3')" title="🔊 点击朗读此句">簡單嚟講，我哋唔係賣嗰啲各部門割裂嘅單點小插件，而係<span class='hl'>用一個大腦打通晒文字、電話語音同埋視像，由售前導購、查單排障到退貨挽留一腳踢包晒</span>；</span> <span class="sent" id="sent_01_hook_hk_s2" data-clip="01_hook_hk_s2.mp3" onclick="playSingleSent(this, '01_hook_hk_s2.mp3')" title="🔊 点击朗读此句">而且我哋敢將<span class='hl'>保底 40% AI 回覆率同 80% 準確率直接寫入合約</span>，好似 Anker、致歐呢啲超過 200 間大牌子都用緊我哋。”</span></span></div>
+    <div class="col-en" id="cell_01_hook_en"><div class="chip-row">
+<span class="play-chip " id="btn_01_hook_en" onclick="playCardSeq('01_hook', 'en')">🔊 Play Full Paragraph</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="a-line"><span class="sent" id="sent_01_hook_en_s0" data-clip="01_hook_en_s0.mp3" onclick="playSingleSent(this, '01_hook_en_s0.mp3')" title="🔊 点击朗读此句">"Hi there! We’re <strong>Shulex</strong>—makers of <strong>Solvea, an AI-MultiHub</strong> that <span class='hl'>puts AI agents across your whole business</span>.</span> <span class="sent" id="sent_01_hook_en_s1" data-clip="01_hook_en_s1.mp3" onclick="playSingleSent(this, '01_hook_en_s1.mp3')" title="🔊 点击朗读此句">Instead of buying separate bots for every team, you get text, voice, and video on one single hub—and we actually <span class='hl'>guarantee ≥40% AI reply rate and ≥80% accuracy right in the contract</span>.</span> <span class="sent" id="sent_01_hook_en_s2" data-clip="01_hook_en_s2.mp3" onclick="playSingleSent(this, '01_hook_en_s2.mp3')" title="🔊 点击朗读此句">Over 200 global brands like Anker and Songmics already run on us."</span></span></div>
+  </div>
+</div><div class="sec">
+  <div class="sec-head"><span>02. 一段话完整介绍（45秒电梯游说 · 客户问“你们具体是怎么做的？”）</span><span class="en-tag">02. One-Paragraph Elevator Pitch (Click Any Sentence to Speak)</span></div>
+  <div class="tri-row">
+    <div class="col-zh" id="cell_02_pitch_zh"><div class="chip-row">
+<span class="play-chip " id="btn_02_pitch_zh" onclick="playCardSeq('02_pitch', 'zh')">🔊 读整段普通话</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="a-line"><span class="sent" id="sent_02_pitch_zh_s0" data-clip="02_pitch_zh_s0.mp3" onclick="playSingleSent(this, '02_pitch_zh_s0.mp3')" title="🔊 点击朗读此句">“我们 2021 年成立，硅谷和杭州双总部（在东京、北京、深圳、长沙也有团队，核心班底来自阿里、字节、特斯拉和安克），除了做全球大模型网关 <strong>Flatkey</strong> 和短剧 <strong>WonderDrama</strong>，最核心的就是 <strong>Solvea（AI-MultiHub）</strong>。</span> <span class="sent" id="sent_02_pitch_zh_s1" data-clip="02_pitch_zh_s1.mp3" onclick="playSingleSent(this, '02_pitch_zh_s1.mp3')" title="🔊 点击朗读此句">现在很多公司上 AI 最头疼的就是‘各买各的（AI in Silos）’——营销、销售、客服各装一个插件，数据不通，老板也算不清 ROI。</span> <span class="sent" id="sent_02_pitch_zh_s2" data-clip="02_pitch_zh_s2.mp3" onclick="playSingleSent(this, '02_pitch_zh_s2.mp3')" title="🔊 点击朗读此句">我们是用<strong>一套底座</strong>把<strong>回消息（SolveaText）、接打电话（SolveaVoice）、看视频排障（SolveaVideo）和人工工作台（SolveaDesk）</strong>全串起来，直接连上你们的店铺、工单和 ERP。</span> <span class="sent" id="sent_02_pitch_zh_s3" data-clip="02_pitch_zh_s3.mp3" onclick="playSingleSent(this, '02_pitch_zh_s3.mp3')" title="🔊 点击朗读此句">客户找过来，AI 自己<span class='hl'>认意图、查订单、跟客户聊、给方案、最后直接进 ERP 下单退换货</span>，7×24 小时懂 50 多种语言，按合同指标交账。”</span></span></div>
+    <div class="col-hk" id="cell_02_pitch_hk"><div class="chip-row">
+<span class="play-chip hk-chip" id="btn_02_pitch_hk" onclick="playCardSeq('02_pitch', 'hk')">🔊 讀整段香港粵語</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="a-line"><span class="sent" id="sent_02_pitch_hk_s0" data-clip="02_pitch_hk_s0.mp3" onclick="playSingleSent(this, '02_pitch_hk_s0.mp3')" title="🔊 点击朗读此句">“我哋 2021 年創立，矽谷同杭州雙總部（喺東京、北京、深圳、長沙都有 Team，核心班底來自阿里、字節、Tesla 同 Anker），除咗做全球大模型網關 <strong>Flatkey</strong> 同短劇 <strong>WonderDrama</strong>，最核心就係 <strong>Solvea（AI-MultiHub）</strong>。</span> <span class="sent" id="sent_02_pitch_hk_s1" data-clip="02_pitch_hk_s1.mp3" onclick="playSingleSent(this, '02_pitch_hk_s1.mp3')" title="🔊 点击朗读此句">而家好多公司用 AI 最頭痛就係‘各自為政（AI in Silos）’——Marketing、Sales、CS 各買一個插件，數據唔通，老細又計唔清 ROI。</span> <span class="sent" id="sent_02_pitch_hk_s2" data-clip="02_pitch_hk_s2.mp3" onclick="playSingleSent(this, '02_pitch_hk_s2.mp3')" title="🔊 点击朗读此句">我哋係用<strong>一套底座</strong>將<strong>覆 Message（SolveaText）、聽電話（SolveaVoice）、睇片排障（SolveaVideo）同埋人工工作台（SolveaDesk）</strong>串連埋一齊，直接駁通你哋嘅網店、工單系統同 ERP。</span> <span class="sent" id="sent_02_pitch_hk_s3" data-clip="02_pitch_hk_s3.mp3" onclick="playSingleSent(this, '02_pitch_hk_s3.mp3')" title="🔊 点击朗读此句">個客搵上門，AI 會自己<span class='hl'>識認意圖、查單、同客傾、出方案、最後直接入 ERP 落單退換貨</span>，7×24 小時識得 50 幾種語言（包括廣東話、英文同普通話），按合約指標同你交數。”</span></span></div>
+    <div class="col-en" id="cell_02_pitch_en"><div class="chip-row">
+<span class="play-chip " id="btn_02_pitch_en" onclick="playCardSeq('02_pitch', 'en')">🔊 Play Full Paragraph</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="a-line"><span class="sent" id="sent_02_pitch_en_s0" data-clip="02_pitch_en_s0.mp3" onclick="playSingleSent(this, '02_pitch_en_s0.mp3')" title="🔊 点击朗读此句">"We started in 2021 with dual hubs in Silicon Valley & Hangzhou (plus Tokyo, Beijing, Shenzhen, Changsha; team from Alibaba, ByteDance, Tesla, Anker). Alongside <strong>Flatkey</strong> and <strong>WonderDrama</strong>, our flagship is <strong>Solvea (AI-MultiHub)</strong>.</span> <span class="sent" id="sent_02_pitch_en_s1" data-clip="02_pitch_en_s1.mp3" onclick="playSingleSent(this, '02_pitch_en_s1.mp3')" title="🔊 点击朗读此句">Here’s the problem we solve: most companies have <strong>‘AI in Silos’</strong>—one tool for marketing, another for sales, another for support. Nothing talks to each other, and ROI is a mystery.</span> <span class="sent" id="sent_02_pitch_en_s2" data-clip="02_pitch_en_s2.mp3" onclick="playSingleSent(this, '02_pitch_en_s2.mp3')" title="🔊 点击朗读此句">With Solvea, everything runs on <strong>one brain</strong> across <strong>text, phone calls (SolveaVoice), video support (SolveaVideo), and your helpdesk (SolveaDesk)</strong>.</span> <span class="sent" id="sent_02_pitch_en_s3" data-clip="02_pitch_en_s3.mp3" onclick="playSingleSent(this, '02_pitch_en_s3.mp3')" title="🔊 点击朗读此句">We plug right into 10+ storefronts, 10+ helpdesks, and 5+ ERPs to <span class='hl'>recognize, verify, communicate, plan, and execute actions</span> 24/7 in 50+ languages."</span></span></div>
+  </div>
+</div><div class="sec">
+  <div class="sec-head"><span>03. 聊天时最打动甲方的 4 个大白话亮点（点任意单句即刻跟读）</span><span class="en-tag">03. Four Killer Talking Points (Click Any Sentence to Speak)</span></div>
+  <div class="tri-row">
+    <div class="col-zh" id="cell_03_hl1_zh"><div class="chip-row">
+<span class="play-chip " id="btn_03_hl1_zh" onclick="playCardSeq('03_hl1', 'zh')">🔊 读整段普通话</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">亮点 1：不卖空壳软件账号，敢把结果写进合同（Slide 7）</span>
+<span class="a-line"><span class="sent" id="sent_03_hl1_zh_s0" data-clip="03_hl1_zh_s0.mp3" onclick="playSingleSent(this, '03_hl1_zh_s0.mp3')" title="🔊 点击朗读此句">“很多软件商把账号卖给您就不管了。我们是当‘全职数字员工’来交付的，<span class='hl'>保底把 ≥40% AI 回复率、≥80% 准确率写进合同</span>。</span> <span class="sent" id="sent_03_hl1_zh_s1" data-clip="03_hl1_zh_s1.mp3" onclick="playSingleSent(this, '03_hl1_zh_s1.mp3')" title="🔊 点击朗读此句">合作就三步：<strong>01 先拿你们真实老工单测个底数 → 02 双方定好目标 → 03 跑出结果您再签字验收</strong>。”</span></span></div>
+    <div class="col-hk" id="cell_03_hl1_hk"><div class="chip-row">
+<span class="play-chip hk-chip" id="btn_03_hl1_hk" onclick="playCardSeq('03_hl1', 'hk')">🔊 讀整段香港粵語</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">亮點 1：唔賣空殼 Account，敢將結果寫入合約（Slide 7）</span>
+<span class="a-line"><span class="sent" id="sent_03_hl1_hk_s0" data-clip="03_hl1_hk_s0.mp3" onclick="playSingleSent(this, '03_hl1_hk_s0.mp3')" title="🔊 点击朗读此句">“好多 SaaS 廠商賣完 Account 俾你就唔理。我哋係當‘全職 AI 數碼員工’咁交付，<span class='hl'>保底將 ≥40% AI 回覆率、≥80% 準確率寫入合約</span>。</span> <span class="sent" id="sent_03_hl1_hk_s1" data-clip="03_hl1_hk_s1.mp3" onclick="playSingleSent(this, '03_hl1_hk_s1.mp3')" title="🔊 点击朗读此句">合作好簡單，三步搞掂：<strong>01 先用你哋真實歷史 Ticket 測個底線 → 02 雙方傾好 Target → 03 跑出結果你先至簽字驗收</strong>。”</span></span></div>
+    <div class="col-en" id="cell_03_hl1_en"><div class="chip-row">
+<span class="play-chip " id="btn_03_hl1_en" onclick="playCardSeq('03_hl1', 'en')">🔊 Play Full Paragraph</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">Highlight 1: We Put Our Results in Writing (Slide 7)</span>
+<span class="a-line"><span class="sent" id="sent_03_hl1_en_s0" data-clip="03_hl1_en_s0.mp3" onclick="playSingleSent(this, '03_hl1_en_s0.mp3')" title="🔊 点击朗读此句">"We don’t just sell software seats and walk away. We <span class='hl'>guarantee ≥40% AI reply rate and ≥80% accuracy in the contract</span>.</span> <span class="sent" id="sent_03_hl1_en_s1" data-clip="03_hl1_en_s1.mp3" onclick="playSingleSent(this, '03_hl1_en_s1.mp3')" title="🔊 点击朗读此句">It’s super simple: <strong>01 We test your real data to set a baseline → 02 Agree on targets → 03 You sign off once we hit the numbers</strong>."</span></span></div>
+  </div>
+  <div class="tri-row alt">
+    <div class="col-zh" id="cell_03_hl2_zh"><div class="chip-row">
+<span class="play-chip " id="btn_03_hl2_zh" onclick="playCardSeq('03_hl2', 'zh')">🔊 读整段普通话</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">亮点 2：不光省客服的钱，还能帮售前赚钱、帮售后把退货劝回来（Slide 18–20）</span>
+<span class="a-line"><span class="sent" id="sent_03_hl2_zh_s0" data-clip="03_hl2_zh_s0.mp3" onclick="playSingleSent(this, '03_hl2_zh_s0.mp3')" title="🔊 点击朗读此句">“在售前，欧美有个家居独立站用我们的 AI 导购推荐，<span class='hl'>每个月直接多卖 $20,000+</span>；</span> <span class="sent" id="sent_03_hl2_zh_s1" data-clip="03_hl2_zh_s1.mp3" onclick="playSingleSent(this, '03_hl2_zh_s1.mp3')" title="🔊 点击朗读此句">在售后，像 <strong>BloomChic</strong> 用我们的退货 Agent，客户要退货时先算成本给小额补偿或换货，<span class='hl'>硬是把 40%–50% 的退货给劝留下来了</span>，跟老客服一样能干。”</span></span></div>
+    <div class="col-hk" id="cell_03_hl2_hk"><div class="chip-row">
+<span class="play-chip hk-chip" id="btn_03_hl2_hk" onclick="playCardSeq('03_hl2', 'hk')">🔊 讀整段香港粵語</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">亮點 2：唔單止幫 CS 慳錢，仲幫 Sales 搵錢、幫售後留住退貨（Slide 18–20）</span>
+<span class="a-line"><span class="sent" id="sent_03_hl2_hk_s0" data-clip="03_hl2_hk_s0.mp3" onclick="playSingleSent(this, '03_hl2_hk_s0.mp3')" title="🔊 点击朗读此句">“喺售前，歐美有個傢俬獨立站用我哋嘅 AI 導購推薦，<span class='hl'>每個月直接多做 $20,000+ 美金生意</span>；</span> <span class="sent" id="sent_03_hl2_hk_s1" data-clip="03_hl2_hk_s1.mp3" onclick="playSingleSent(this, '03_hl2_hk_s1.mp3')" title="🔊 点击朗读此句">喺售後，好似 <strong>BloomChic</strong> 用我哋嘅 RMA Agent，個客想退貨嗰陣先計清楚成本、畀少少補償或者換貨，<span class='hl'>成功留住 40%–50% 嘅退貨單</span>，同資深老員工一樣咁醒目。”</span></span></div>
+    <div class="col-en" id="cell_03_hl2_en"><div class="chip-row">
+<span class="play-chip " id="btn_03_hl2_en" onclick="playCardSeq('03_hl2', 'en')">🔊 Play Full Paragraph</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">Highlight 2: It Makes Money & Saves Returns, Not Just Q&A (Slides 18–20)</span>
+<span class="a-line"><span class="sent" id="sent_03_hl2_en_s0" data-clip="03_hl2_en_s0.mp3" onclick="playSingleSent(this, '03_hl2_en_s0.mp3')" title="🔊 点击朗读此句">"On the sales side, our <strong>AI shopping guide brings in +$20,000/month in extra sales</strong> for a US/EU DTC brand.</span> <span class="sent" id="sent_03_hl2_en_s1" data-clip="03_hl2_en_s1.mp3" onclick="playSingleSent(this, '03_hl2_en_s1.mp3')" title="🔊 点击朗读此句">On the return side, <strong>BloomChic</strong> uses our RMA Agent to offer smart partial refunds or exchanges first—<span class='hl'>saving 40–50% of returns</span>, just like a veteran human rep."</span></span></div>
+  </div>
+  <div class="tri-row">
+    <div class="col-zh" id="cell_03_hl3_zh"><div class="chip-row">
+<span class="play-chip " id="btn_03_hl3_zh" onclick="playCardSeq('03_hl3', 'zh')">🔊 读整段普通话</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">亮点 3：能接电话、能看视频排障，还能用大白话一句话建 Agent（Slide 13–21）</span>
+<span class="a-line"><span class="sent" id="sent_03_hl3_zh_s0" data-clip="03_hl3_zh_s0.mp3" onclick="playSingleSent(this, '03_hl3_zh_s0.mp3')" title="🔊 点击朗读此句">“除了回消息，<span class='hl'>SolveaVoice</span> 打电话哪怕对面很吵、随时打断都能聊；<span class='hl'>SolveaVideo</span> 能直接看客户拍的视频手把手教安装、验破损。</span> <span class="sent" id="sent_03_hl3_zh_s1" data-clip="03_hl3_zh_s1.mp3" onclick="playSingleSent(this, '03_hl3_zh_s1.mp3')" title="🔊 点击朗读此句">而且我们刚上的 <strong>CXClaw</strong>，业务同学不用懂代码，<span class='hl'>直接打字说几句大白话，几分钟就能捏出一个专属 Agent</span>。”</span></span></div>
+    <div class="col-hk" id="cell_03_hl3_hk"><div class="chip-row">
+<span class="play-chip hk-chip" id="btn_03_hl3_hk" onclick="playCardSeq('03_hl3', 'hk')">🔊 讀整段香港粵語</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">亮點 3：識聽電話、識睇片排障，仲可以用日常白話起個 Agent（Slide 13–21）</span>
+<span class="a-line"><span class="sent" id="sent_03_hl3_hk_s0" data-clip="03_hl3_hk_s0.mp3" onclick="playSingleSent(this, '03_hl3_hk_s0.mp3')" title="🔊 点击朗读此句">“除咗覆訊息，<span class='hl'>SolveaVoice</span> 聽電話就算對面好嘈、隨時插嘴都對答如流；<span class='hl'>SolveaVideo</span> 仲可以直接睇個客拍嘅片，一步步教佢裝機、驗破損。</span> <span class="sent" id="sent_03_hl3_hk_s1" data-clip="03_hl3_hk_s1.mp3" onclick="playSingleSent(this, '03_hl3_hk_s1.mp3')" title="🔊 点击朗读此句">加上我哋最新出嘅 <strong>CXClaw</strong>，業務同事唔使識寫 Code，<span class='hl'>直接打幾句日常白話，幾分鐘就整到一個專屬業務 Agent</span>。”</span></span></div>
+    <div class="col-en" id="cell_03_hl3_en"><div class="chip-row">
+<span class="play-chip " id="btn_03_hl3_en" onclick="playCardSeq('03_hl3', 'en')">🔊 Play Full Paragraph</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">Highlight 3: Text, Voice & Video + Build Agents in Plain English (Slides 13–21)</span>
+<span class="a-line"><span class="sent" id="sent_03_hl3_en_s0" data-clip="03_hl3_en_s0.mp3" onclick="playSingleSent(this, '03_hl3_en_s0.mp3')" title="🔊 点击朗读此句">"<span class='hl'>SolveaVoice</span> handles real calls with background noise, and <span class='hl'>SolveaVideo</span> visually guides setup and damage checks.</span> <span class="sent" id="sent_03_hl3_en_s1" data-clip="03_hl3_en_s1.mp3" onclick="playSingleSent(this, '03_hl3_en_s1.mp3')" title="🔊 点击朗读此句">Plus, with <strong>CXClaw</strong>, your team just <span class='hl'>describes what they need in plain English</span> and spins up a custom agent in minutes—no coding needed."</span></span></div>
+  </div>
+  <div class="tri-row alt">
+    <div class="col-zh" id="cell_03_hl4_zh"><div class="chip-row">
+<span class="play-chip " id="btn_03_hl4_zh" onclick="playCardSeq('03_hl4', 'zh')">🔊 读整段普通话</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">亮点 4：大牌客户真刀真枪跑出来的硬数据（Slide 23–29）</span>
+<span class="a-line"><span class="sent" id="sent_03_hl4_zh_s0" data-clip="03_hl4_zh_s0.mp3" onclick="playSingleSent(this, '03_hl4_zh_s0.mp3')" title="🔊 点击朗读此句">“<strong>安克（Anker）</strong>现在 <span class='hl'>70% 的问题全靠 AI 闭环解决，人效提了 90%</span>；</span> <span class="sent" id="sent_03_hl4_zh_s1" data-clip="03_hl4_zh_s1.mp3" onclick="playSingleSent(this, '03_hl4_zh_s1.mp3')" title="🔊 点击朗读此句"><strong>致欧家居</strong> <span class='hl'>68% 物流工单 AI 自己回、准确率 92%</span>；</span> <span class="sent" id="sent_03_hl4_zh_s2" data-clip="03_hl4_zh_s2.mp3" onclick="playSingleSent(this, '03_hl4_zh_s2.mp3')" title="🔊 点击朗读此句">北美物流 <strong>GOFO</strong> 覆盖全美一万多个邮编，<span class='hl'>62% 邮件全自动处理</span>；</span> <span class="sent" id="sent_03_hl4_zh_s3" data-clip="03_hl4_zh_s3.mp3" onclick="playSingleSent(this, '03_hl4_zh_s3.mp3')" title="🔊 点击朗读此句"><strong>库犸割草机</strong>处理时长直接<span class='hl'>砍半，旺季单量翻倍愣是 0 增员</span>。”</span></span></div>
+    <div class="col-hk" id="cell_03_hl4_hk"><div class="chip-row">
+<span class="play-chip hk-chip" id="btn_03_hl4_hk" onclick="playCardSeq('03_hl4', 'hk')">🔊 讀整段香港粵語</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">亮點 4：大牌客仔真刀真槍跑出嚟嘅硬數據（Slide 23–29）</span>
+<span class="a-line"><span class="sent" id="sent_03_hl4_hk_s0" data-clip="03_hl4_hk_s0.mp3" onclick="playSingleSent(this, '03_hl4_hk_s0.mp3')" title="🔊 点击朗读此句">“<strong>Anker（安克）</strong>而家 <span class='hl'>70% 嘅問題全靠 AI 一條龍搞掂，人效提升咗 90%</span>；</span> <span class="sent" id="sent_03_hl4_hk_s1" data-clip="03_hl4_hk_s1.mp3" onclick="playSingleSent(this, '03_hl4_hk_s1.mp3')" title="🔊 点击朗读此句"><strong>致歐家居（Songmics）</strong> <span class='hl'>68% 物流 Ticket 由 AI 自動覆、準確率 92%</span>；</span> <span class="sent" id="sent_03_hl4_hk_s2" data-clip="03_hl4_hk_s2.mp3" onclick="playSingleSent(this, '03_hl4_hk_s2.mp3')" title="🔊 点击朗读此句">北美物流 <strong>GOFO</strong> 覆蓋全美過萬個郵編，<span class='hl'>62% Email 全自動處理</span>；</span> <span class="sent" id="sent_03_hl4_hk_s3" data-clip="03_hl4_hk_s3.mp3" onclick="playSingleSent(this, '03_hl4_hk_s3.mp3')" title="🔊 点击朗读此句"><strong>庫犸割草機（Mammotion）</strong>處理時間直接<span class='hl'>減半，旺季單量翻倍都係 0 增員</span>。”</span></span></div>
+    <div class="col-en" id="cell_03_hl4_en"><div class="chip-row">
+<span class="play-chip " id="btn_03_hl4_en" onclick="playCardSeq('03_hl4', 'en')">🔊 Play Full Paragraph</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">Highlight 4: Battle-Tested Numbers with Category Leaders (Slides 23–29)</span>
+<span class="a-line"><span class="sent" id="sent_03_hl4_en_s0" data-clip="03_hl4_en_s0.mp3" onclick="playSingleSent(this, '03_hl4_en_s0.mp3')" title="🔊 点击朗读此句">"<strong>Anker</strong> hits <span class='hl'>70% AI resolution & 90% higher efficiency</span>.</span> <span class="sent" id="sent_03_hl4_en_s1" data-clip="03_hl4_en_s1.mp3" onclick="playSingleSent(this, '03_hl4_en_s1.mp3')" title="🔊 点击朗读此句"><strong>Songmics</strong> automates <span class='hl'>68% of logistics tickets at 92% accuracy</span>.</span> <span class="sent" id="sent_03_hl4_en_s2" data-clip="03_hl4_en_s2.mp3" onclick="playSingleSent(this, '03_hl4_en_s2.mp3')" title="🔊 点击朗读此句"><strong>GOFO</strong> handles <span class='hl'>62% of delivery emails</span> across 10,000+ US ZIP codes.</span> <span class="sent" id="sent_03_hl4_en_s3" data-clip="03_hl4_en_s3.mp3" onclick="playSingleSent(this, '03_hl4_en_s3.mp3')" title="🔊 点击朗读此句">And <strong>Mammotion</strong> cut handling time by <span class='hl'>50%—scaling peak season with zero new hires</span>."</span></span></div>
+  </div>
+</div><div class="sec">
+  <div class="sec-head"><span>04. 展会高频问答攻防句（点击任意问题或回答单句即刻发音）</span><span class="en-tag">04. High-Frequency Booth Q&A (Click Any Sentence to Speak)</span></div>
+  <div class="tri-row">
+    <div class="col-zh" id="cell_04_q1_zh"><div class="chip-row">
+<span class="play-chip " id="btn_04_q1_zh" onclick="playCardSeq('04_q1', 'zh')">🔊 读整段普通话</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="q-line sent" id="sent_04_q1_zh_q" data-clip="04_q1_zh_q.mp3" onclick="playSingleSent(this, '04_q1_zh_q.mp3')" title="🔊 点击朗读此问题">Q1：我们已经用了 Zendesk / Salesforce 自带 AI 或其他小插件，为什么要换你们？</span>
+<span class="a-line"><span class="sent" id="sent_04_q1_zh_s0" data-clip="04_q1_zh_s0.mp3" onclick="playSingleSent(this, '04_q1_zh_s0.mp3')" title="🔊 点击朗读此句">“工单自带的 AI 只能答简单的 FAQ，一旦遇到一单拆好几个包裹、硬件连不上网、或者要进 ERP 退差价就卡死了，而且他们绝不给您背指标。</span> <span class="sent" id="sent_04_q1_zh_s1" data-clip="04_q1_zh_s1.mp3" onclick="playSingleSent(this, '04_q1_zh_s1.mp3')" title="🔊 点击朗读此句"><strong>用我们完全不用推翻您现在的系统，直接外挂在 Zendesk、Salesforce 和 ERP 上面跑</strong>，把真正复杂的活儿干完。”</span></span></div>
+    <div class="col-hk" id="cell_04_q1_hk"><div class="chip-row">
+<span class="play-chip hk-chip" id="btn_04_q1_hk" onclick="playCardSeq('04_q1', 'hk')">🔊 讀整段香港粵語</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="q-line sent" id="sent_04_q1_hk_q" data-clip="04_q1_hk_q.mp3" onclick="playSingleSent(this, '04_q1_hk_q.mp3')" title="🔊 点击朗读此问题">Q1：我哋已經用緊 Zendesk / Salesforce 自帶 AI 或者其他插件，點解要轉用你哋？</span>
+<span class="a-line"><span class="sent" id="sent_04_q1_hk_s0" data-clip="04_q1_hk_s0.mp3" onclick="playSingleSent(this, '04_q1_hk_s0.mp3')" title="🔊 点击朗读此句">“工單系統自帶嘅 AI 淨係識答簡單 FAQ，一遇到拆單多包裹、硬件連唔上網、或者要入 ERP 退差價就即刻卡死，而且佢哋絕對唔會同你孭 KPI。</span> <span class="sent" id="sent_04_q1_hk_s1" data-clip="04_q1_hk_s1.mp3" onclick="playSingleSent(this, '04_q1_hk_s1.mp3')" title="🔊 点击朗读此句"><strong>用我哋完全唔使推翻你現有系統，直接外掛喺 Zendesk、Salesforce 同 ERP 上面跑</strong>，幫你將最複雜嘅手尾執乾淨。”</span></span></div>
+    <div class="col-en" id="cell_04_q1_en"><div class="chip-row">
+<span class="play-chip " id="btn_04_q1_en" onclick="playCardSeq('04_q1', 'en')">🔊 Play Full Paragraph</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="q-line sent" id="sent_04_q1_en_q" data-clip="04_q1_en_q.mp3" onclick="playSingleSent(this, '04_q1_en_q.mp3')" title="🔊 点击朗读此问题">Q1: We already use Zendesk / Salesforce AI or other bots. Why switch?</span>
+<span class="a-line"><span class="sent" id="sent_04_q1_en_s0" data-clip="04_q1_en_s0.mp3" onclick="playSingleSent(this, '04_q1_en_s0.mp3')" title="🔊 点击朗读此句">"Built-in bots live in silos—they’re fine for simple FAQs, but the moment a customer has a split shipment, a hardware glitch, or needs an ERP refund, they get stuck. And they don’t guarantee KPIs.</span> <span class="sent" id="sent_04_q1_en_s1" data-clip="04_q1_en_s1.mp3" onclick="playSingleSent(this, '04_q1_en_s1.mp3')" title="🔊 点击朗读此句"><strong>No rip-and-replace: Solvea sits right on top of Zendesk, Salesforce, and your ERP</strong> to actually finish the job."</span></span></div>
+  </div>
+  <div class="tri-row alt">
+    <div class="col-zh" id="cell_04_q2_zh"><div class="chip-row">
+<span class="play-chip " id="btn_04_q2_zh" onclick="playCardSeq('04_q2', 'zh')">🔊 读整段普通话</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="q-line sent" id="sent_04_q2_zh_q" data-clip="04_q2_zh_q.mp3" onclick="playSingleSent(this, '04_q2_zh_q.mp3')" title="🔊 点击朗读此问题">Q2：大公司对隐私很敏感，数据安全怎么保？AI 会不会乱说话惹麻烦？</span>
+<span class="a-line"><span class="sent" id="sent_04_q2_zh_s0" data-clip="04_q2_zh_s0.mp3" onclick="playSingleSent(this, '04_q2_zh_s0.mp3')" title="🔊 点击朗读此句">“两道保险：第一，我们过了 <strong>ISO 27001 和 SOC 2 认证、完全符合 GDPR</strong>，客户隐私自动打码脱敏，放在北美独立服务器上；</span> <span class="sent" id="sent_04_q2_zh_s1" data-clip="04_q2_zh_s1.mp3" onclick="playSingleSent(this, '04_q2_zh_s1.mp3')" title="🔊 点击朗读此句">第二，我们有<strong>发送前风控护栏</strong>，万一 AI 回复里带了违规外链、提到竞品或者乱许诺，<strong>发出去之前就会被系统自动拦下</strong>，高风险客诉直接转人工。”</span></span></div>
+    <div class="col-hk" id="cell_04_q2_hk"><div class="chip-row">
+<span class="play-chip hk-chip" id="btn_04_q2_hk" onclick="playCardSeq('04_q2', 'hk')">🔊 讀整段香港粵語</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="q-line sent" id="sent_04_q2_hk_q" data-clip="04_q2_hk_q.mp3" onclick="playSingleSent(this, '04_q2_hk_q.mp3')" title="🔊 点击朗读此问题">Q2：大集團對私隱好敏感，數據安全點保障？AI 會唔會亂講嘢搞出禍？</span>
+<span class="a-line"><span class="sent" id="sent_04_q2_hk_s0" data-clip="04_q2_hk_s0.mp3" onclick="playSingleSent(this, '04_q2_hk_s0.mp3')" title="🔊 点击朗读此句">“兩重保障：第一，我哋攞齊 <strong>ISO 27001 同 SOC 2 認證、完全符合 GDPR</strong>，客人私隱（PII）自動打格仔脫敏，擺喺北美獨立 Server；</span> <span class="sent" id="sent_04_q2_hk_s1" data-clip="04_q2_hk_s1.mp3" onclick="playSingleSent(this, '04_q2_hk_s1.mp3')" title="🔊 点击朗读此句">第二，我哋有<strong>發送前風控護欄</strong>，萬一 AI 覆嘅內容有違規外鏈、提到競爭對手或者亂咁應承客，<strong>發出街之前就會自動攔截</strong>，高風險 Case 直接轉俾真人跟進。”</span></span></div>
+    <div class="col-en" id="cell_04_q2_en"><div class="chip-row">
+<span class="play-chip " id="btn_04_q2_en" onclick="playCardSeq('04_q2', 'en')">🔊 Play Full Paragraph</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="q-line sent" id="sent_04_q2_en_q" data-clip="04_q2_en_q.mp3" onclick="playSingleSent(this, '04_q2_en_q.mp3')" title="🔊 点击朗读此问题">Q2: What about data privacy, GDPR, and AI saying the wrong thing?</span>
+<span class="a-line"><span class="sent" id="sent_04_q2_en_s0" data-clip="04_q2_en_s0.mp3" onclick="playSingleSent(this, '04_q2_en_s0.mp3')" title="🔊 点击朗读此句">"Two safety nets. One: we’re <strong>ISO 27001 & SOC 2 certified, fully GDPR-compliant</strong>, with auto-masked PII on dedicated North America servers.</span> <span class="sent" id="sent_04_q2_en_s1" data-clip="04_q2_en_s1.mp3" onclick="playSingleSent(this, '04_q2_en_s1.mp3')" title="🔊 点击朗读此句">Two: our <strong>pre-send guardrails</strong> catch and block external links, competitor mentions, or over-promises before a reply ever goes out—and escalate risky cases to humans."</span></span></div>
+  </div>
+  <div class="tri-row">
+    <div class="col-zh" id="cell_04_q3_zh"><div class="chip-row">
+<span class="play-chip " id="btn_04_q3_zh" onclick="playCardSeq('04_q3', 'zh')">🔊 读整段普通话</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="q-line sent" id="sent_04_q3_zh_q" data-clip="04_q3_zh_q.mp3" onclick="playSingleSent(this, '04_q3_zh_q.mp3')" title="🔊 点击朗读此问题">Q3：除了跨境电商和智能硬件，别的行业能用吗？</span>
+<span class="a-line"><span class="sent" id="sent_04_q3_zh_s0" data-clip="04_q3_zh_s0.mp3" onclick="playSingleSent(this, '04_q3_zh_s0.mp3')" title="🔊 点击朗读此句">“完全通用！除了电商硬件，我们现在主要跑在<strong>六大行业</strong>：① <strong>全球物流</strong>（查件/改地址/理赔）、② <strong>B2B 全球分销</strong>（经销商报价/查库存）、③ <strong>视频与泛娱乐</strong>（创作者服务/申诉/会员挽留）、</span> <span class="sent" id="sent_04_q3_zh_s1" data-clip="04_q3_zh_s1.mp3" onclick="playSingleSent(this, '04_q3_zh_s1.mp3')" title="🔊 点击朗读此句">④ <strong>酒旅出行</strong>（改期退订/24小时多语种救急）、⑤ <strong>连锁零售</strong>（查门店库存/会员积分）、⑥ <strong>本地生活服务</strong>（预约派单），粤语、英语、普通话等 50 多种语言都能聊。”</span></span></div>
+    <div class="col-hk" id="cell_04_q3_hk"><div class="chip-row">
+<span class="play-chip hk-chip" id="btn_04_q3_hk" onclick="playCardSeq('04_q3', 'hk')">🔊 讀整段香港粵語</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="q-line sent" id="sent_04_q3_hk_q" data-clip="04_q3_hk_q.mp3" onclick="playSingleSent(this, '04_q3_hk_q.mp3')" title="🔊 点击朗读此问题">Q3：除咗跨境電商同智能硬件，香港本地或者其他行業啱唔啱用？</span>
+<span class="a-line"><span class="sent" id="sent_04_q3_hk_s0" data-clip="04_q3_hk_s0.mp3" onclick="playSingleSent(this, '04_q3_hk_s0.mp3')" title="🔊 点击朗读此句">“完全啱用！除咗電商硬件，我哋而家仲跑緊<strong>六大行業</strong>：① <strong>全球物流</strong>（查件/改地址/理賠）、② <strong>B2B 全球分銷</strong>（經銷商報價/查 Stock）、③ <strong>視像與泛娛樂</strong>（創作者支援/申訴/留存）、</span> <span class="sent" id="sent_04_q3_hk_s1" data-clip="04_q3_hk_s1.mp3" onclick="playSingleSent(this, '04_q3_hk_s1.mp3')" title="🔊 点击朗读此句">④ <strong>酒店旅遊</strong>（改期退訂/24小時多語種緊急支援）、⑤ <strong>連鎖零售</strong>（查門市 Stock/會員積分/退換貨）、⑥ <strong>本地生活服務</strong>（預約派單），廣東話、英文、普通話夾雜講都完全聽得明。”</span></span></div>
+    <div class="col-en" id="cell_04_q3_en"><div class="chip-row">
+<span class="play-chip " id="btn_04_q3_en" onclick="playCardSeq('04_q3', 'en')">🔊 Play Full Paragraph</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="q-line sent" id="sent_04_q3_en_q" data-clip="04_q3_en_q.mp3" onclick="playSingleSent(this, '04_q3_en_q.mp3')" title="🔊 点击朗读此问题">Q3: Beyond e-commerce and hardware, what other industries do you cover?</span>
+<span class="a-line"><span class="sent" id="sent_04_q3_en_s0" data-clip="04_q3_en_s0.mp3" onclick="playSingleSent(this, '04_q3_en_s0.mp3')" title="🔊 点击朗读此句">"We run across <strong>six major sectors</strong>: ① <strong>Global Logistics</strong> (tracking & claims), ② <strong>B2B Distribution</strong> (dealer quotes & stock), ③ <strong>Global Video</strong> (creator support & appeals),</span> <span class="sent" id="sent_04_q3_en_s1" data-clip="04_q3_en_s1.mp3" onclick="playSingleSent(this, '04_q3_en_s1.mp3')" title="🔊 点击朗读此句">④ <strong>Travel & Hospitality</strong> (booking changes & 24/7 help), ⑤ <strong>Global Retail</strong> (store stock & loyalty), and ⑥ <strong>Local Services</strong> (appointments & dispatch)—in 50+ languages."</span></span></div>
+  </div>
+  <div class="tri-row alt">
+    <div class="col-zh" id="cell_04_q4_zh"><div class="chip-row">
+<span class="play-chip " id="btn_04_q4_zh" onclick="playCardSeq('04_q4', 'zh')">🔊 读整段普通话</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="q-line sent" id="sent_04_q4_zh_q" data-clip="04_q4_zh_q.mp3" onclick="playSingleSent(this, '04_q4_zh_q.mp3')" title="🔊 点击朗读此问题">Q4：接起来麻不麻烦？要占我们 IT 团队多少时间？</span>
+<span class="a-line"><span class="sent" id="sent_04_q4_zh_s0" data-clip="04_q4_zh_s0.mp3" onclick="playSingleSent(this, '04_q4_zh_s0.mp3')" title="🔊 点击朗读此句">“基本不占你们 IT 精力！我们库里有 <strong>200 多个现成的场景 Agent</strong>，</span> <span class="sent" id="sent_04_q4_zh_s1" data-clip="04_q4_zh_s1.mp3" onclick="playSingleSent(this, '04_q4_zh_s1.mp3')" title="🔊 点击朗读此句">都是我们自己的交付团队帮您干完五步：<strong>诊脉老工单 → 训练知识库 → 沙盒压测 → 灰度上线 → 达标验收</strong>，直接连你们现有系统，最快几周就能跑出合同效果。”</span></span></div>
+    <div class="col-hk" id="cell_04_q4_hk"><div class="chip-row">
+<span class="play-chip hk-chip" id="btn_04_q4_hk" onclick="playCardSeq('04_q4', 'hk')">🔊 讀整段香港粵語</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="q-line sent" id="sent_04_q4_hk_q" data-clip="04_q4_hk_q.mp3" onclick="playSingleSent(this, '04_q4_hk_q.mp3')" title="🔊 点击朗读此问题">Q4：對接起嚟麻唔麻煩？要霸住我哋 IT Team 幾多時間？</span>
+<span class="a-line"><span class="sent" id="sent_04_q4_hk_s0" data-clip="04_q4_hk_s0.mp3" onclick="playSingleSent(this, '04_q4_hk_s0.mp3')" title="🔊 点击朗读此句">“基本上唔使點煩你哋 IT！我哋本身有 <strong>200 幾個現成嘅場景 Agent</strong>，</span> <span class="sent" id="sent_04_q4_hk_s1" data-clip="04_q4_hk_s1.mp3" onclick="playSingleSent(this, '04_q4_hk_s1.mp3')" title="🔊 点击朗读此句">全程由我哋交付 Team 幫你跟足五步：<strong>診斷舊 Ticket → 訓練知識庫 → 沙盒壓測 → 灰度上線 → 達標驗收</strong>，直接駁落你現有系統，最快幾星期就見到合約效果。”</span></span></div>
+    <div class="col-en" id="cell_04_q4_en"><div class="chip-row">
+<span class="play-chip " id="btn_04_q4_en" onclick="playCardSeq('04_q4', 'en')">🔊 Play Full Paragraph</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="q-line sent" id="sent_04_q4_en_q" data-clip="04_q4_en_q.mp3" onclick="playSingleSent(this, '04_q4_en_q.mp3')" title="🔊 点击朗读此问题">Q4: How long does setup take? Will this bog down our IT team?</span>
+<span class="a-line"><span class="sent" id="sent_04_q4_en_s0" data-clip="04_q4_en_s0.mp3" onclick="playSingleSent(this, '04_q4_en_s0.mp3')" title="🔊 点击朗读此句">"Barely any IT lift. We have <strong>200+ ready-to-go scenario agents</strong>, and our team does the heavy lifting in five steps: <strong>Diagnose → Train → Test → Launch → Accept</strong>.</span> <span class="sent" id="sent_04_q4_en_s1" data-clip="04_q4_en_s1.mp3" onclick="playSingleSent(this, '04_q4_en_s1.mp3')" title="🔊 点击朗读此句">We set it up on your live systems and keep tuning it—you’ll hit target KPIs in just a few weeks."</span></span></div>
+  </div>
+</div>
+
+  <!-- 05. 收尾促单 -->
+  <div class="cta-box">
+    <div class="cta-zh" id="cell_05_cta_zh"><div class="chip-row">
+<span class="play-chip " id="btn_05_cta_zh" onclick="playCardSeq('05_cta', 'zh')">🔊 读整段普通话</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">🎯 聊完收尾促单话术（普通话）：</span>
+<span class="a-line"><span class="sent" id="sent_05_cta_zh_s0" data-clip="05_cta_zh_s0.mp3" onclick="playSingleSent(this, '05_cta_zh_s0.mp3')" title="🔊 点击朗读此句">“光听我说不如直接在您业务上跑一下！</span> <span class="sent" id="sent_05_cta_zh_s1" data-clip="05_cta_zh_s1.mp3" onclick="playSingleSent(this, '05_cta_zh_s1.mp3')" title="🔊 点击朗读此句">您直接<strong>扫我们这个二维码约个免费定制实测（POC）</strong>——我们先帮您把现有问题诊个脉，<strong>现场给您搭一个贴合你们业务的专属场景，让您马上就能上手试一下真实效果</strong>！”</span></span></div>
+    <div class="cta-hk" id="cell_05_cta_hk"><div class="chip-row">
+<span class="play-chip hk-chip" id="btn_05_cta_hk" onclick="playCardSeq('05_cta', 'hk')">🔊 讀整段香港粵語</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">🎯 傾完收尾促單話術（香港粵語）：</span>
+<span class="a-line"><span class="sent" id="sent_05_cta_hk_s0" data-clip="05_cta_hk_s0.mp3" onclick="playSingleSent(this, '05_cta_hk_s0.mp3')" title="🔊 点击朗读此句">“齋聽我講不如直接喺你哋業務度試一試！</span> <span class="sent" id="sent_05_cta_hk_s1" data-clip="05_cta_hk_s1.mp3" onclick="playSingleSent(this, '05_cta_hk_s1.mp3')" title="🔊 点击朗读此句">你可以直接<strong>掃一掃我哋呢個 QR Code 約個免費定制實測（Pilot / POC）</strong>——我哋先幫你現有嘅問題把個脈，<strong>現場幫你搭一個貼合你哋業務嘅專屬場景，等你可以即刻落手試下真實效果</strong>！”</span></span></div>
+    <div class="cta-en" id="cell_05_cta_en"><div class="chip-row">
+<span class="play-chip " id="btn_05_cta_en" onclick="playCardSeq('05_cta', 'en')">🔊 Play Full Paragraph</span>
+<span class="sent-hint">👆 点下方任意单句即读单句</span>
+</div>
+<span class="tag-title">🎯 Closing Call-to-Action (English):</span>
+<span class="a-line"><span class="sent" id="sent_05_cta_en_s0" data-clip="05_cta_en_s0.mp3" onclick="playSingleSent(this, '05_cta_en_s0.mp3')" title="🔊 点击朗读此句">"Want to see it run on your own cases?</span> <span class="sent" id="sent_05_cta_en_s1" data-clip="05_cta_en_s1.mp3" onclick="playSingleSent(this, '05_cta_en_s1.mp3')" title="🔊 点击朗读此句">Just <strong>scan this QR code for a quick custom pilot (or P-O-C)</strong>—we’ll diagnose your setup and <strong>spin up a tailored scenario right away so you can test-drive it live</strong>!"</span></span></div>
+  </div>
+</div>
+
+<audio id="audioPlayer"></audio>
+
+<script>
+const CARD_CLIPS = {"01_hook_zh": [["sent_01_hook_zh_s0", "01_hook_zh_s0.mp3"], ["sent_01_hook_zh_s1", "01_hook_zh_s1.mp3"], ["sent_01_hook_zh_s2", "01_hook_zh_s2.mp3"]], "01_hook_hk": [["sent_01_hook_hk_s0", "01_hook_hk_s0.mp3"], ["sent_01_hook_hk_s1", "01_hook_hk_s1.mp3"], ["sent_01_hook_hk_s2", "01_hook_hk_s2.mp3"]], "01_hook_en": [["sent_01_hook_en_s0", "01_hook_en_s0.mp3"], ["sent_01_hook_en_s1", "01_hook_en_s1.mp3"], ["sent_01_hook_en_s2", "01_hook_en_s2.mp3"]], "02_pitch_zh": [["sent_02_pitch_zh_s0", "02_pitch_zh_s0.mp3"], ["sent_02_pitch_zh_s1", "02_pitch_zh_s1.mp3"], ["sent_02_pitch_zh_s2", "02_pitch_zh_s2.mp3"], ["sent_02_pitch_zh_s3", "02_pitch_zh_s3.mp3"]], "02_pitch_hk": [["sent_02_pitch_hk_s0", "02_pitch_hk_s0.mp3"], ["sent_02_pitch_hk_s1", "02_pitch_hk_s1.mp3"], ["sent_02_pitch_hk_s2", "02_pitch_hk_s2.mp3"], ["sent_02_pitch_hk_s3", "02_pitch_hk_s3.mp3"]], "02_pitch_en": [["sent_02_pitch_en_s0", "02_pitch_en_s0.mp3"], ["sent_02_pitch_en_s1", "02_pitch_en_s1.mp3"], ["sent_02_pitch_en_s2", "02_pitch_en_s2.mp3"], ["sent_02_pitch_en_s3", "02_pitch_en_s3.mp3"]], "03_hl1_zh": [["sent_03_hl1_zh_s0", "03_hl1_zh_s0.mp3"], ["sent_03_hl1_zh_s1", "03_hl1_zh_s1.mp3"]], "03_hl1_hk": [["sent_03_hl1_hk_s0", "03_hl1_hk_s0.mp3"], ["sent_03_hl1_hk_s1", "03_hl1_hk_s1.mp3"]], "03_hl1_en": [["sent_03_hl1_en_s0", "03_hl1_en_s0.mp3"], ["sent_03_hl1_en_s1", "03_hl1_en_s1.mp3"]], "03_hl2_zh": [["sent_03_hl2_zh_s0", "03_hl2_zh_s0.mp3"], ["sent_03_hl2_zh_s1", "03_hl2_zh_s1.mp3"]], "03_hl2_hk": [["sent_03_hl2_hk_s0", "03_hl2_hk_s0.mp3"], ["sent_03_hl2_hk_s1", "03_hl2_hk_s1.mp3"]], "03_hl2_en": [["sent_03_hl2_en_s0", "03_hl2_en_s0.mp3"], ["sent_03_hl2_en_s1", "03_hl2_en_s1.mp3"]], "03_hl3_zh": [["sent_03_hl3_zh_s0", "03_hl3_zh_s0.mp3"], ["sent_03_hl3_zh_s1", "03_hl3_zh_s1.mp3"]], "03_hl3_hk": [["sent_03_hl3_hk_s0", "03_hl3_hk_s0.mp3"], ["sent_03_hl3_hk_s1", "03_hl3_hk_s1.mp3"]], "03_hl3_en": [["sent_03_hl3_en_s0", "03_hl3_en_s0.mp3"], ["sent_03_hl3_en_s1", "03_hl3_en_s1.mp3"]], "03_hl4_zh": [["sent_03_hl4_zh_s0", "03_hl4_zh_s0.mp3"], ["sent_03_hl4_zh_s1", "03_hl4_zh_s1.mp3"], ["sent_03_hl4_zh_s2", "03_hl4_zh_s2.mp3"], ["sent_03_hl4_zh_s3", "03_hl4_zh_s3.mp3"]], "03_hl4_hk": [["sent_03_hl4_hk_s0", "03_hl4_hk_s0.mp3"], ["sent_03_hl4_hk_s1", "03_hl4_hk_s1.mp3"], ["sent_03_hl4_hk_s2", "03_hl4_hk_s2.mp3"], ["sent_03_hl4_hk_s3", "03_hl4_hk_s3.mp3"]], "03_hl4_en": [["sent_03_hl4_en_s0", "03_hl4_en_s0.mp3"], ["sent_03_hl4_en_s1", "03_hl4_en_s1.mp3"], ["sent_03_hl4_en_s2", "03_hl4_en_s2.mp3"], ["sent_03_hl4_en_s3", "03_hl4_en_s3.mp3"]], "04_q1_zh": [["sent_04_q1_zh_q", "04_q1_zh_q.mp3"], ["sent_04_q1_zh_s0", "04_q1_zh_s0.mp3"], ["sent_04_q1_zh_s1", "04_q1_zh_s1.mp3"]], "04_q1_hk": [["sent_04_q1_hk_q", "04_q1_hk_q.mp3"], ["sent_04_q1_hk_s0", "04_q1_hk_s0.mp3"], ["sent_04_q1_hk_s1", "04_q1_hk_s1.mp3"]], "04_q1_en": [["sent_04_q1_en_q", "04_q1_en_q.mp3"], ["sent_04_q1_en_s0", "04_q1_en_s0.mp3"], ["sent_04_q1_en_s1", "04_q1_en_s1.mp3"]], "04_q2_zh": [["sent_04_q2_zh_q", "04_q2_zh_q.mp3"], ["sent_04_q2_zh_s0", "04_q2_zh_s0.mp3"], ["sent_04_q2_zh_s1", "04_q2_zh_s1.mp3"]], "04_q2_hk": [["sent_04_q2_hk_q", "04_q2_hk_q.mp3"], ["sent_04_q2_hk_s0", "04_q2_hk_s0.mp3"], ["sent_04_q2_hk_s1", "04_q2_hk_s1.mp3"]], "04_q2_en": [["sent_04_q2_en_q", "04_q2_en_q.mp3"], ["sent_04_q2_en_s0", "04_q2_en_s0.mp3"], ["sent_04_q2_en_s1", "04_q2_en_s1.mp3"]], "04_q3_zh": [["sent_04_q3_zh_q", "04_q3_zh_q.mp3"], ["sent_04_q3_zh_s0", "04_q3_zh_s0.mp3"], ["sent_04_q3_zh_s1", "04_q3_zh_s1.mp3"]], "04_q3_hk": [["sent_04_q3_hk_q", "04_q3_hk_q.mp3"], ["sent_04_q3_hk_s0", "04_q3_hk_s0.mp3"], ["sent_04_q3_hk_s1", "04_q3_hk_s1.mp3"]], "04_q3_en": [["sent_04_q3_en_q", "04_q3_en_q.mp3"], ["sent_04_q3_en_s0", "04_q3_en_s0.mp3"], ["sent_04_q3_en_s1", "04_q3_en_s1.mp3"]], "04_q4_zh": [["sent_04_q4_zh_q", "04_q4_zh_q.mp3"], ["sent_04_q4_zh_s0", "04_q4_zh_s0.mp3"], ["sent_04_q4_zh_s1", "04_q4_zh_s1.mp3"]], "04_q4_hk": [["sent_04_q4_hk_q", "04_q4_hk_q.mp3"], ["sent_04_q4_hk_s0", "04_q4_hk_s0.mp3"], ["sent_04_q4_hk_s1", "04_q4_hk_s1.mp3"]], "04_q4_en": [["sent_04_q4_en_q", "04_q4_en_q.mp3"], ["sent_04_q4_en_s0", "04_q4_en_s0.mp3"], ["sent_04_q4_en_s1", "04_q4_en_s1.mp3"]], "05_cta_zh": [["sent_05_cta_zh_s0", "05_cta_zh_s0.mp3"], ["sent_05_cta_zh_s1", "05_cta_zh_s1.mp3"]], "05_cta_hk": [["sent_05_cta_hk_s0", "05_cta_hk_s0.mp3"], ["sent_05_cta_hk_s1", "05_cta_hk_s1.mp3"]], "05_cta_en": [["sent_05_cta_en_s0", "05_cta_en_s0.mp3"], ["sent_05_cta_en_s1", "05_cta_en_s1.mp3"]]};
+const CARD_ORDER = ['01_hook','02_pitch','03_hl1','03_hl2','03_hl3','03_hl4','04_q1','04_q2','04_q3','04_q4','05_cta'];
+let AUDIO_BASE = 'playbook_audio';
+
+const player = document.getElementById('audioPlayer');
+let currentRate = 1.0;
+let loopOne = false;
+let queue = [];
+let queueIdx = -1;
+let activeSentEl = null;
+
+function clearHighlights() {
+  document.querySelectorAll('.sent.active-sent').forEach(el => el.classList.remove('active-sent'));
+  document.querySelectorAll('.play-chip.active').forEach(el => el.classList.remove('active'));
+}
+
+function playSingleSent(el, clipFile) {
+  // If clicking the exact same active sentence while playing, pause it
+  if (activeSentEl === el && !player.paused && queue.length <= 1) {
+    stopAudio();
+    return;
+  }
+  clearHighlights();
+  queue = [{ sentId: el.id, clip: clipFile }];
+  queueIdx = 0;
+  playQueueCurrent();
+}
+
+function playCardSeq(cid, lang) {
+  const key = `${cid}_${lang}`;
+  const list = CARD_CLIPS[key] || [];
+  if (!list.length) return;
+  clearHighlights();
+  const btn = document.getElementById(`btn_${cid}_${lang}`);
+  if (btn) btn.classList.add('active');
+  queue = list.map(([sentId, clip]) => ({ sentId, clip, btnId: `btn_${cid}_${lang}` }));
+  queueIdx = 0;
+  playQueueCurrent();
+}
+
+function startFullPlaylist(lang) {
+  clearHighlights();
+  queue = [];
+  CARD_ORDER.forEach(cid => {
+    const key = `${cid}_${lang}`;
+    (CARD_CLIPS[key] || []).forEach(([sentId, clip]) => {
+      queue.push({ sentId, clip, btnId: `btn_${cid}_${lang}` });
+    });
+  });
+  if (!queue.length) return;
+  queueIdx = 0;
+  playQueueCurrent();
+}
+
+function playQueueCurrent() {
+  if (queueIdx < 0 || queueIdx >= queue.length) {
+    stopAudio();
+    return;
+  }
+  document.querySelectorAll('.sent.active-sent').forEach(el => el.classList.remove('active-sent'));
+  const item = queue[queueIdx];
+  const el = document.getElementById(item.sentId);
+  activeSentEl = el;
+  if (el) {
+    el.classList.add('active-sent');
+    const rect = el.getBoundingClientRect();
+    if (rect.top < 70 || rect.bottom > window.innerHeight - 30) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    const snippet = el.innerText.trim().slice(0, 28);
+    document.getElementById('nowPlayingText').textContent = `🔊 正在朗读: ${snippet}...`;
+  }
+  player.src = `${AUDIO_BASE}/${item.clip}?v=5`;
+  player.playbackRate = currentRate;
+  player.play();
+}
+
+player.addEventListener('ended', () => {
+  if (loopOne && queue.length === 1) {
+    player.currentTime = 0;
+    player.play();
+    return;
+  }
+  if (queueIdx + 1 < queue.length) {
+    queueIdx++;
+    playQueueCurrent();
+  } else if (loopOne && queue.length > 1) {
+    queueIdx = 0;
+    playQueueCurrent();
+  } else {
+    stopAudio();
+  }
+});
+
+function stopAudio() {
+  player.pause();
+  player.currentTime = 0;
+  queue = [];
+  queueIdx = -1;
+  activeSentEl = null;
+  clearHighlights();
+  document.getElementById('nowPlayingText').textContent = '👆 直接点击页面任意【单句】即可听该句发音！';
+}
+
+function toggleLoopOne() {
+  loopOne = !loopOne;
+  const btn = document.getElementById('btnLoopOne');
+  btn.textContent = loopOne ? '🔁 单句/单段循环: 开' : '🔁 单句/单段循环: 关';
+  btn.classList.toggle('active-mode', loopOne);
+}
+
+function changeSpeed(val) {
+  currentRate = parseFloat(val);
+  player.playbackRate = currentRate;
+}
+
+function changeView(mode) {
+  document.body.classList.remove('view-hk-en', 'view-zh-en');
+  if (mode === 'hk-en') document.body.classList.add('view-hk-en');
+  else if (mode === 'zh-en') document.body.classList.add('view-zh-en');
+}
+</script>
+
+</body>
+</html>
